@@ -1,0 +1,20 @@
+/**
+ * UploadSection.css
+ * Custom CSS for Upload Secction component adjustments.
+ * 
+ *  Authors:
+ *  - Samson Mate (A00476626)
+ */
+
+#header-bg {
+    margin-bottom: 5vh;
+}
+
+#image-grid {
+    margin: 5vh;
+}
+
+#submit-button {
+    margin: 5vh;
+    padding: 1vw;
+}

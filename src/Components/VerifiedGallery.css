@@ -1,0 +1,13 @@
+/**
+ * VerifiedGallery.css
+ * Custom CSS for Verified Gallery component adjustments.
+ * 
+ *  Authors:
+ *  - Samson Mate (A00476626)
+ */
+
+#header-bg {
+    margin: 5vh;
+    padding-left: 2vw;
+    padding-right: 2vw;
+}

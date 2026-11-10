@@ -1,0 +1,14 @@
+# These files will not appear in the github repo.
+# This is important to hide sensitve data and unnecessary files.
+
+# Sensitive environment variables
+.env
+
+# These folders should be built locally once the repo is cloned.
+node_modules/
+dist/
+package-lock.json
+
+# Etc
+.vscode
+.idea/

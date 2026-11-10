@@ -1,0 +1,159 @@
+/**
+ * @file Index.css
+ * @description Global and responsive styling for the Woodland Conservation Site, including dark mode and navigation responsiveness.
+ * This file uses Tailwind CSS for utilities and extends global styles for custom elements.
+ *
+ * Author: Raish Raj Joshi,
+ *         Mohammad Zaid Khan - Fixed dark mode.
+ * Author: Jaden Eisenhauer - removed code that was no-longer needed
+ * Author: Samson Mate - Custom Cursor
+ */
+@config "../tailwind.config.js";
+@import "tailwindcss";
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Calibri", sans-serif; /* Global font family */
+  font-weight: 300;
+  line-height: 1.5;
+  @apply transition-colors duration-200; /* Smooth color transitions */
+  cursor: none !important; /* Hide default cursor */
+}
+
+/* ============================================================
+ * Custom Cursor Styles
+ * ------------------------------------------------------------
+ * Creates a custom cursor that replaces the default browser cursor.
+ * The cursor appears as a larger pointer arrow pointing to the right,
+ * with a black outline and a light yellow/khaki center (dark mode text color).
+ * 
+ * Implementation Details:
+ * - Uses CSS border trick to create triangle arrow shape
+ * - ::before creates the outer black border
+ * - ::after creates the inner fill with dark mode text color (#f0E68C)
+ * - Rotated 45 degrees to point right (90 degrees clockwise from up)
+ * - Positioned absolutely and follows mouse via JavaScript
+ * 
+ * @author Samson Mate
+ * ============================================================ */
+
+.custom-cursor {
+  /* Fixed positioning allows cursor to follow mouse anywhere on screen */
+  position: fixed;
+  /* Zero dimensions - actual shape created via pseudo-elements */
+  width: 0;
+  height: 0;
+  /* Prevent cursor from intercepting mouse events */
+  pointer-events: none;
+  /* Ensure cursor appears above all other content */
+  z-index: 9999;
+  /* Center horizontally on mouse position (tip of arrow at cursor) */
+  transform: translate(-50%, 0);
+  /* Smooth fade in/out when visibility changes */
+  transition: opacity 0.2s ease;
+}
+
+/* Outer arrow (black outline) - creates the pointer shape */
+/* Uses CSS border trick: transparent borders create triangle shape */
+.custom-cursor::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  /* Create triangle pointing up-left, then rotate 45deg to point right */
+  /* Top and left borders are solid black, creating the arrow outline */
+  border-top: 4px solid #000000;
+  border-right: 4px solid transparent;
+  border-bottom: 28px solid transparent;
+  border-left: 28px solid #000000;
+  /* Rotate 45 degrees clockwise from up-left to point right */
+  transform: rotate(45deg);
+  /* Rotation origin at top-left corner (arrow tip) */
+  transform-origin: 0 0;
+}
+
+/* Inner arrow (dark mode text color #f0E68C) - fills the cursor */
+/* Slightly smaller and offset to create the filled appearance */
+.custom-cursor::after {
+  content: '';
+  position: absolute;
+  top: 1px;   /* Slight offset to create border effect */
+  left: 1px;  /* Slight offset to create border effect */
+  width: 0;
+  height: 0;
+  /* Inner fill using dark mode text color for visibility */
+  border-top: 3px solid #f0E68C;
+  border-right: 3px solid transparent;
+  border-bottom: 24px solid transparent;
+  border-left: 24px solid #f0E68C;
+  /* Same rotation as outer arrow */
+  transform: rotate(45deg);
+  transform-origin: 0 0;
+}
+
+/* Hide custom cursor on mobile/touch devices */
+@media (hover: none) and (pointer: coarse) {
+  * {
+    cursor: auto !important;
+  }
+  
+  .custom-cursor {
+    display: none;
+  }
+}
+
+/* Navigation Links */
+nav a {
+  margin: 0 1rem;
+  text-decoration: none;
+  font-size: 1.25rem;
+  transition: color 0.2s ease;
+}
+
+nav a.active {
+  padding: 8px 16px;
+  border-radius: 5px;
+}
+
+/* Mobile and Tablet Responsive Navigation */
+@media only screen and (max-width: 1024px) {
+  header .nav-btn {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  header nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    transform: translateY(-100vh);
+    transition: transform 1s ease;
+    z-index: 50;
+  }
+
+  header .responsive_nav {
+    transform: translateY(0);
+  }
+
+  nav .nav-close-btn {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+}

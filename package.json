@@ -1,0 +1,50 @@
+{
+  "name": "Woodland Conservation G",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "pm2 start pm2.config.cjs",
+    "test:e2e": "cypress open --e2e",
+    "test:component": "cypress open --component",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@hello-pangea/dnd": "^18.0.1",
+    "@react-google-maps/api": "^2.20.7",
+    "axios": "^1.12.2",
+    "conc": "^0.0.3",
+    "cors": "^2.8.5",
+    "create-vite": "^8.0.1",
+    "cypress": "^15.21.1",
+    "express": "^5.1.0",
+    "multer": "^2.0.2",
+    "nodemailer": "^7.0.6",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-icons": "^5.5.0",
+    "react-router-dom": "^7.9.3",
+    "pm2": "^7.1.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.36.0",
+    "@tailwindcss/postcss": "^4.1.14",
+    "@tailwindcss/vite": "^4.1.14",
+    "@types/react": "^19.1.13",
+    "@types/react-dom": "^19.1.9",
+    "@vitejs/plugin-react": "^5.0.4",
+    "autoprefixer": "^10.4.21",
+    "babel-plugin-react-compiler": "^19.1.0-rc.3",
+    "eslint": "^9.36.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "globals": "^16.4.0",
+    "postcss": "^8.5.6",
+    "stylelint-config-standard": "^39.0.1",
+    "tailwindcss": "^4.1.14",
+    "vite": "^7.1.7",
+    "vite-plugin-svgr": "^4.5.0"
+  }
+}
