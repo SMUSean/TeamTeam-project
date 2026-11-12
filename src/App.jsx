@@ -1,7 +1,7 @@
 /**
  * @file App.js
  * @description The main application entry point that renders the Navbar and manages routes for various pages of the Woodland Conservation Site.
- * @author Raish Raj Joshi
+ * @author Raish Raj Joshi, Lee Jonah
  */
 
 import React from "react";
@@ -17,6 +17,7 @@ import { Route, Routes } from "react-router-dom"; // Routing utilities from reac
 import FaunaFloraFunga from "./pages/FaunaFloraFunga"; // Fauna/Flora/Funga page component
 import SiteMap from "./pages/SiteMap.jsx" // Site Map page component.
 import CustomCursor from "./Components/CustomCursor.jsx"; // Custom cursor component
+import Login from "./pages/Login";
 
 /**
  * @function App
@@ -55,6 +56,7 @@ function App() {
           <Route path="/ecommerce" element={<Ecommerce />} /> {/* Route for the eCommerce page */}
           <Route path="/faunaflorafunga" element={<FaunaFloraFunga />} /> {/* Route for the Fauna/Flora/Funga page */}
           <Route path="/sitemap" element={<SiteMap/>}/>{" "}
+          <Route path="/login" element={<Login />} />
           {/* Route for the Site Map page */}
         </Routes>
       </main>
