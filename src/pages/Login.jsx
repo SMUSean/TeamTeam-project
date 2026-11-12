@@ -102,9 +102,12 @@ function Login() {
 
         <p className="text-center mt-6 text-gray-600 dark:text-gray-300">
           Don't have an account?{" "}
-          <span className="text-green-600 font-semibold">
-            Sign up (coming soon)
-          </span>
+          <Link
+            to="/signup"
+            className="text-green-600 font-semibold hover:underline"
+          >
+            Sign Up
+          </Link>
         </p>
       </div>
     </div>

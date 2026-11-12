@@ -18,6 +18,7 @@ import FaunaFloraFunga from "./pages/FaunaFloraFunga"; // Fauna/Flora/Funga page
 import SiteMap from "./pages/SiteMap.jsx" // Site Map page component.
 import CustomCursor from "./Components/CustomCursor.jsx"; // Custom cursor component
 import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 
 /**
  * @function App
@@ -57,6 +58,7 @@ function App() {
           <Route path="/faunaflorafunga" element={<FaunaFloraFunga />} /> {/* Route for the Fauna/Flora/Funga page */}
           <Route path="/sitemap" element={<SiteMap/>}/>{" "}
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
           {/* Route for the Site Map page */}
         </Routes>
       </main>
