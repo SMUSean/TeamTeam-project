@@ -1,6 +1,6 @@
 /**
  * @file Login.jsx
- * @description login page for the Woodland Conservation Site. This component provides a user interface for users to log in with their email and password. It includes form validation and a toggle for showing/hiding the password.
+ * @description login page for the Woodland Conservation Site. This component provides a user interface for users to log in with their email/username and password. It includes form validation and a toggle for showing/hiding the password.
  * @author Lee Jonah
  */
 
@@ -8,7 +8,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 function Login() {
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState("");
@@ -35,20 +35,20 @@ function Login() {
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label
-              htmlFor="email"
+              htmlFor="identifier"
               className="block mb-2 font-medium text-gray-800 dark:text-gray-200"
             >
-              Email Address
+              Email Address or Username
             </label>
 
             <input
-              id="email"
-              type="email"
-              autoComplete="email"
+              id="identifier"
+              type="text"
+              autoComplete="username"
               required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
+              value={identifier}
+              onChange={(e) => setIdentifier(e.target.value)}
+              placeholder="Enter your email or username"
               className="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-green-600"
             />
           </div>
