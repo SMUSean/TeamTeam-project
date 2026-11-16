@@ -9,10 +9,13 @@ import { Link } from "react-router-dom";
 
 function Signup() {
   // Store the information entered into the form.
-  const [fullName, setFullName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [username, setusername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const status = "user";
 
   // Control password visibility.
   const [showPassword, setShowPassword] = useState(false);
@@ -58,20 +61,39 @@ function Signup() {
           {/* Full Name */}
           <div>
             <label
-              htmlFor="fullName"
+              htmlFor="firstName"
               className="block mb-2 font-medium text-gray-800 dark:text-gray-200"
             >
-              Full Name
+              First Name
             </label>
 
             <input
-              id="fullName"
+              id="firstName"
               type="text"
               autoComplete="name"
               required
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              placeholder="Enter your full name"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              placeholder="Enter your first name"
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-green-600"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="lastName"
+              className="block mb-2 font-medium text-gray-800 dark:text-gray-200"
+            >
+              First Name
+            </label>
+
+            <input
+              id="lastName"
+              type="text"
+              autoComplete="name"
+              required
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              placeholder="Enter your last name"
               className="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-green-600"
             />
           </div>
@@ -93,6 +115,24 @@ function Signup() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-green-600"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="username"
+              className="block mb-2 font-medium text-gray-800 dark:text-gray-200"
+            >
+              First Name
+            </label>
+
+            <input
+              id="username"
+              type="text"
+              required
+              value={username}
+              onChange={(e) => setusername(e.target.value)}
+              placeholder="Enter your username"
               className="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-green-600"
             />
           </div>
