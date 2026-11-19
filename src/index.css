@@ -46,7 +46,7 @@
   /* Prevent cursor from intercepting mouse events */
   pointer-events: none;
   /* Ensure cursor appears above all other content */
-  z-index: 9999;
+  z-index: 2147483647;
   /* Center horizontally on mouse position (tip of arrow at cursor) */
   transform: translate(-50%, 0);
   /* Smooth fade in/out when visibility changes */
