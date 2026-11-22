@@ -1,458 +1,173 @@
 /**
  * ============================================================
- *  Gallery Page E2E Tests – Saint Margaret's Bay Area Gallery
- *  ------------------------------------------------------------
- *  Comprehensive end-to-end tests for the Gallery page functionality.
- *  
- *  Test Coverage:
- *   - Page loading and initial state
- *   - Verified gallery display
- *   - Image upload functionality
- *   - Drag-and-drop reordering
- *   - Image removal
- *   - File validation and error handling
- *   - Upload submission and success/error cases
- *  
- *  @author Test Suite
- *  @lastupdated October 2025
+ * Gallery Page E2E Tests – Saint Margaret's Bay Area Gallery
+ * ------------------------------------------------------------
+ * End-to-end tests for the Gallery page functionality.
+ *
+ * Test Coverage:
+ *  - Page loading and initial state
+ *  - Gallery image display
+ *  - Enlarged image preview
+ *  - Closing the image preview
+ *
+ * Note:
+ *  Images are currently loaded from the public/images folder.
+ *  Backend image storage and upload functionality have not
+ *  yet been implemented.
+ *
+ *  @author Lee Jonah
+ *  @lastupdated November 2026
  * ============================================================
  */
 
-describe('Gallery Page', () => {
-    beforeEach(() => {
-        // Visit the gallery page before each test
-        cy.visit('http://localhost:3080/gallery');
-        // Wait for the page to be fully loaded
-        cy.wait(1000); // Allow time for API calls to complete
+describe("Gallery Page", () => {
+  // ============================================================
+  // PAGE LOADING AND INITIAL STATE TESTS
+  // ============================================================
+
+  beforeEach(() => {
+    cy.visit("/gallery");
+  });
+
+  it("should load the gallery page successfully", () => {
+    cy.url().should("include", "/gallery");
+    cy.contains("h2", "Gallery Photos").should("be.visible");
+  });
+
+  // ============================================================
+  // VERIFIED GALLERY DISPLAY TESTS
+  // ============================================================
+
+  it("should retrieve approved images from the backend", () => {
+    // Monitor the real backend request without mocking it
+    cy.intercept("GET", "/api/gallery/approved").as("getApprovedImages");
+
+    // Reload the page to trigger the API request
+    cy.reload();
+
+    // Wait for the backend response
+    cy.wait("@getApprovedImages").then((interception) => {
+      // Accept HTTP 200 (OK) or 304 (Not Modified)
+      expect(interception.response.statusCode).to.be.oneOf([200, 304]);
+
+      // HTTP 304 responses may not contain a body
+      if (interception.response.statusCode === 200) {
+        // Verify the response contains an images array
+        expect(interception.response.body)
+          .to.have.property("images")
+          .that.is.an("array");
+      }
     });
+  });
 
-    // ============================================================
-    // PAGE LOADING AND INITIAL STATE TESTS
-    // ============================================================
+  it("should display approved images from the backend", () => {
+    // Find all approved images displayed in the Gallery
+    cy.get('img[alt^="Verified"]').should("have.length.at.least", 1);
 
-    it('should load the gallery page successfully', () => {
-        cy.url().should('include', '/gallery');
-        cy.get('body').should('be.visible');
-    });
+    // Verify that the first approved image is visible
+    cy.get('img[alt^="Verified"]').first().should("be.visible");
+  });
 
-    it('should display the verified gallery section', () => {
-        cy.contains('h2', 'Gallery Photos').should('be.visible');
-    });
+  it("should load approved images successfully", () => {
+    // Find the approved images in the Gallery
+    cy.get('img[alt^="Verified"]')
+      .should("have.length.at.least", 1)
+      .each(($img) => {
+        // Verify the image has a valid source attribute
+        cy.wrap($img).should("have.attr", "src").and("not.be.empty");
 
-    it('should display the upload section', () => {
-        cy.contains('h2', 'Upload Images').should('be.visible');
-        cy.get('input[type="file"]').should('be.visible');
-    });
-
-    it('should fetch and display verified images from the backend', () => {
-        // Intercept the API call to verify it's made
-        cy.intercept('GET', '/api/gallery/approved').as('getApprovedImages');
-        cy.visit('http://localhost:3080/gallery');
-        cy.wait('@getApprovedImages').then((interception) => {
-            // Accept both 200 (OK) and 304 (Not Modified) as valid success responses
-            expect(interception.response.statusCode).to.be.oneOf([200, 304]);
-            // Only check response body if status is 200 (304 responses may not have body)
-            if (interception.response.statusCode === 200) {
-                expect(interception.response.body).to.have.property('images');
-            }
+        // Verify the browser successfully loaded the image
+        cy.wrap($img).should(($image) => {
+          expect($image[0].naturalWidth).to.be.greaterThan(0);
         });
+      });
+  });
 
-        // Verify images are displayed (if any exist)
-        cy.get('section').contains('Gallery Photos').should('be.visible');
+  // ============================================================
+  // IMAGE LIGHTBOX TESTS
+  // ============================================================
+
+  it("should enlarge an image when clicked", () => {
+    // Click the first approved image in the Gallery
+    cy.get('button[aria-label^="Enlarge gallery image"]').first().click();
+
+    // Verify that the lightbox dialog appears
+    cy.get('[role="dialog"]').should("be.visible");
+
+    // Verify that the enlarged image is displayed
+    cy.get('[role="dialog"]')
+      .find('img[alt="Enlarged gallery photograph"]')
+      .should("be.visible");
+  });
+
+  it("should display uploader information in the lightbox", () => {
+    // Open the first approved image
+    cy.get('button[aria-label^="Enlarge gallery image"]').first().click();
+
+    // Verify the uploader information is displayed
+    cy.get('[role="dialog"]').within(() => {
+      cy.contains("Uploaded by").should("be.visible");
+      cy.contains("WoodlandUser").should("be.visible");
     });
-
-    // ============================================================
-    // VERIFIED GALLERY DISPLAY TESTS
-    // ============================================================
-
-    it('should display verified images in a grid layout', () => {
-        // Check if the grid container exists
-        // The grid is a sibling of the header div within the section
-        cy.contains('h2', 'Gallery Photos')
-            .closest('section')
-            .find('.grid')
-            .should('exist');
-    });
-
-    it('should display image cards with proper structure', () => {
-        // Wait for images to load
-        cy.wait(2000);
-
-        // Check if any image cards exist (may be 0 if no approved images)
-        cy.get('body').then(($body) => {
-            if ($body.find('img[alt^="Verified"]').length > 0) {
-                cy.get('img[alt^="Verified"]').first().should('be.visible');
-                cy.get('img[alt^="Verified"]').first().should('have.attr', 'src');
-            }
-        });
-    });
-
-    // ============================================================
-    // UPLOAD SECTION FUNCTIONALITY TESTS
-    // ============================================================
-
-    it('should display upload input and size indicator', () => {
-        cy.get('input[type="file"]').should('be.visible');
-        cy.contains('Total size:').should('be.visible');
-        cy.contains('MB / 100 MB').should('be.visible');
-    });
-
-    it('should show "No images uploaded yet" message when no images are selected', () => {
-        cy.contains('No images uploaded yet.').should('be.visible');
-    });
-
-    it('should not show submit button when no images are uploaded', () => {
-        cy.get('#submit-button').should('not.exist');
-    });
-
-    // ============================================================
-    // FILE UPLOAD AND PREVIEW TESTS
-    // ============================================================
-
-    it('should accept image file selection and display preview', () => {
-        // Create a test image file
-        const fileName = 'test-image.jpg';
-        const fileContent = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/2wBDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwA/8A';
-
-        cy.get('input[type="file"]').selectFile({
-            contents: Cypress.Buffer.from(fileContent.split(',')[1], 'base64'),
-            fileName: fileName,
-            mimeType: 'image/jpeg'
-        }, { force: true });
-
-        // Wait for preview to render
-        cy.wait(500);
-
-        // Check that preview images are displayed
-        cy.get('img[alt^="Uploaded"]').should('have.length.at.least', 1);
-        cy.get('img[alt^="Uploaded"]').first().should('be.visible');
-
-        // Check that submit button appears
-        cy.get('#submit-button').should('be.visible').should('contain', 'Submit');
-    });
-
-    it('should update total size display when images are selected', () => {
-        const fileName = 'test-image.jpg';
-        const fileContent = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/2wBDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwA/8A';
-
-        cy.get('input[type="file"]').selectFile({
-            contents: Cypress.Buffer.from(fileContent.split(',')[1], 'base64'),
-            fileName: fileName,
-            mimeType: 'image/jpeg'
-        }, { force: true });
-
-        cy.wait(500);
-
-        // Verify size display is updated (should show some MB value)
-        cy.contains('Total size:').parent().should('contain.text', 'MB / 100 MB');
-    });
-
-    it('should accept multiple image files', () => {
-        const fileContent = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/2wBDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwA/8A';
-        const files = [
-            { fileName: 'test1.jpg', mimeType: 'image/jpeg' },
-            { fileName: 'test2.jpg', mimeType: 'image/jpeg' },
-            { fileName: 'test3.jpg', mimeType: 'image/jpeg' }
-        ].map(file => ({
-            contents: Cypress.Buffer.from(fileContent.split(',')[1], 'base64'),
-            fileName: file.fileName,
-            mimeType: file.mimeType
-        }));
-
-        cy.get('input[type="file"]').selectFile(files, { force: true });
-        cy.wait(500);
-
-        // Verify multiple images are displayed
-        cy.get('img[alt^="Uploaded"]').should('have.length', 3);
-    });
-
-    // ============================================================
-    // IMAGE REMOVAL TESTS
-    // ============================================================
-
-    it('should allow removing individual images', () => {
-        const fileContent = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/2wBDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwA/8A';
-        const files = [
-            { fileName: 'test1.jpg', mimeType: 'image/jpeg' },
-            { fileName: 'test2.jpg', mimeType: 'image/jpeg' }
-        ].map(file => ({
-            contents: Cypress.Buffer.from(fileContent.split(',')[1], 'base64'),
-            fileName: file.fileName,
-            mimeType: file.mimeType
-        }));
-
-        cy.get('input[type="file"]').selectFile(files, { force: true });
-        cy.wait(500);
-
-        // Verify two images are displayed
-        cy.get('img[alt^="Uploaded"]').should('have.length', 2);
-
-        // Click remove button on first image
-        cy.get('button[aria-label="Remove image"]').first().click();
-        cy.wait(300);
-
-        // Verify one image remains
-        cy.get('img[alt^="Uploaded"]').should('have.length', 1);
-    });
-
-    it('should hide submit button when all images are removed', () => {
-        const fileContent = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/2wBDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwA/8A';
-
-        cy.get('input[type="file"]').selectFile({
-            contents: Cypress.Buffer.from(fileContent.split(',')[1], 'base64'),
-            fileName: 'test.jpg',
-            mimeType: 'image/jpeg'
-        }, { force: true });
-        cy.wait(500);
-
-        // Verify submit button exists
-        cy.get('#submit-button').should('be.visible');
-
-        // Remove the image
-        cy.get('button[aria-label="Remove image"]').click();
-        cy.wait(300);
-
-        // Verify submit button is hidden
-        cy.get('#submit-button').should('not.exist');
-    });
-
-    // ============================================================
-    // DRAG AND DROP REORDERING TESTS
-    // ============================================================
-
-    it('should support drag-and-drop reordering of images', () => {
-        const fileContent = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/2wBDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwA/8A';
-        const files = [
-            { fileName: 'test1.jpg', mimeType: 'image/jpeg' },
-            { fileName: 'test2.jpg', mimeType: 'image/jpeg' },
-            { fileName: 'test3.jpg', mimeType: 'image/jpeg' }
-        ].map(file => ({
-            contents: Cypress.Buffer.from(fileContent.split(',')[1], 'base64'),
-            fileName: file.fileName,
-            mimeType: file.mimeType
-        }));
-
-        cy.get('input[type="file"]').selectFile(files, { force: true });
-        cy.wait(500);
-
-        // Verify multiple images are displayed (confirms drag-and-drop structure is set up)
-        cy.get('img[alt^="Uploaded"]').should('have.length', 3);
-
-        // Verify images are in a grid layout (drag-and-drop requires a container)
-        cy.contains('h2', 'Your Images')
-            .closest('div')
-            .find('.grid')
-            .should('exist');
-
-        // Note: @hello-pangea/dnd may not add data-rbd-* attributes to the DOM
-        // The presence of multiple images in a grid layout confirms drag-and-drop is configured
-        // Full drag-and-drop interaction testing is better suited for manual testing or
-        // more complex E2E scenarios with proper drag simulation
-    });
-
-    // ============================================================
-    // UPLOAD SUBMISSION TESTS
-    // ============================================================
-
-    it('should submit images successfully', () => {
-        // Intercept the upload API call
-        cy.intercept('POST', '/api/gallery/uploads', {
-            statusCode: 200,
-            body: {
-                message: 'Successfully uploaded 1 image(s)! They will be visible for everyone once verified by site administrators.',
-                files: ['test-upload.jpg']
-            }
-        }).as('uploadImages');
-
-        const fileContent = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/2wBDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwA/8A';
-
-        cy.get('input[type="file"]').selectFile({
-            contents: Cypress.Buffer.from(fileContent.split(',')[1], 'base64'),
-            fileName: 'test.jpg',
-            mimeType: 'image/jpeg'
-        }, { force: true });
-        cy.wait(500);
-
-        // Click submit button
-        cy.get('#submit-button').click();
-
-        // Wait for the API call
-        cy.wait('@uploadImages');
-
-        // Verify success message (alert)
-        cy.on('window:alert', (str) => {
-            expect(str).to.contain('Successfully uploaded');
-        });
-    });
-
-    it('should clear images after successful submission', () => {
-        // Intercept the upload API call
-        cy.intercept('POST', '/api/gallery/uploads', {
-            statusCode: 200,
-            body: {
-                message: 'Successfully uploaded 1 image(s)!',
-                files: ['test-upload.jpg']
-            }
-        }).as('uploadImages');
-
-        const fileContent = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/2wBDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwA/8A';
-
-        cy.get('input[type="file"]').selectFile({
-            contents: Cypress.Buffer.from(fileContent.split(',')[1], 'base64'),
-            fileName: 'test.jpg',
-            mimeType: 'image/jpeg'
-        }, { force: true });
-        cy.wait(500);
-
-        cy.get('#submit-button').click();
-        cy.wait('@uploadImages');
-        cy.wait(1000); // Wait for state update
-
-        // Verify images are cleared
-        cy.contains('No images uploaded yet.').should('be.visible');
-        cy.get('#submit-button').should('not.exist');
-    });
-
-    // ============================================================
-    // ERROR HANDLING TESTS
-    // ============================================================
-
-    it('should handle upload API errors gracefully', () => {
-        // Intercept and simulate server error
-        cy.intercept('POST', '/api/gallery/uploads', {
-            statusCode: 500,
-            body: { error: 'Internal server error' }
-        }).as('uploadError');
-
-        const fileContent = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/2wBDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwA/8A';
-
-        cy.get('input[type="file"]').selectFile({
-            contents: Cypress.Buffer.from(fileContent.split(',')[1], 'base64'),
-            fileName: 'test.jpg',
-            mimeType: 'image/jpeg'
-        }, { force: true });
-        cy.wait(500);
-
-        cy.get('#submit-button').click();
-        cy.wait('@uploadError');
-
-        // Verify error alert is shown
-        cy.on('window:alert', (str) => {
-            expect(str).to.contain('error');
-        });
-    });
-
-    it('should handle network errors during upload', () => {
-        // Intercept and simulate network failure
-        cy.intercept('POST', '/api/gallery/uploads', {
-            forceNetworkError: true
-        }).as('networkError');
-
-        const fileContent = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/2wBDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwA/8A';
-
-        cy.get('input[type="file"]').selectFile({
-            contents: Cypress.Buffer.from(fileContent.split(',')[1], 'base64'),
-            fileName: 'test.jpg',
-            mimeType: 'image/jpeg'
-        }, { force: true });
-        cy.wait(500);
-
-        cy.get('#submit-button').click();
-        cy.wait(1000);
-
-        // Verify error handling
-        cy.on('window:alert', (str) => {
-            expect(str).to.contain('error');
-        });
-    });
-
-    it('should prevent submission when no images are selected', () => {
-        // Try to trigger submit when no images (button shouldn't exist, but test the behavior)
-        cy.get('#submit-button').should('not.exist');
-
-        // If we somehow trigger submit, verify it shows alert
-        cy.window().then((win) => {
-            cy.stub(win, 'alert').as('alertStub');
-        });
-    });
-
-    it('should handle rate limiting errors', () => {
-        // Intercept and simulate rate limit error
-        cy.intercept('POST', '/api/gallery/uploads', {
-            statusCode: 429,
-            body: { error: 'Too many uploads. Please try again later.' }
-        }).as('rateLimitError');
-
-        const fileContent = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/2wBDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwA/8A';
-
-        cy.get('input[type="file"]').selectFile({
-            contents: Cypress.Buffer.from(fileContent.split(',')[1], 'base64'),
-            fileName: 'test.jpg',
-            mimeType: 'image/jpeg'
-        }, { force: true });
-        cy.wait(500);
-
-        cy.get('#submit-button').click();
-        cy.wait('@rateLimitError');
-
-        // Verify rate limit error is handled
-        cy.on('window:alert', (str) => {
-            expect(str).to.contain('error');
-        });
-    });
-
-    it('should handle file size limit errors from server', () => {
-        // Intercept and simulate file size limit error
-        cy.intercept('POST', '/api/gallery/uploads', {
-            statusCode: 400,
-            body: { error: 'Total upload exceeds 100MB limit' }
-        }).as('sizeLimitError');
-
-        const fileContent = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/2wBDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwA/8A';
-
-        cy.get('input[type="file"]').selectFile({
-            contents: Cypress.Buffer.from(fileContent.split(',')[1], 'base64'),
-            fileName: 'test.jpg',
-            mimeType: 'image/jpeg'
-        }, { force: true });
-        cy.wait(500);
-
-        cy.get('#submit-button').click();
-        cy.wait('@sizeLimitError');
-
-        // Verify error message is shown
-        cy.on('window:alert', (str) => {
-            expect(str).to.contain('error');
-        });
-    });
-
-    // ============================================================
-    // FILE VALIDATION TESTS
-    // ============================================================
-
-    it('should only accept image file types', () => {
-        // Try to upload a non-image file (text file)
-        const textFile = new File(['test content'], 'test.txt', { type: 'text/plain' });
-
-        // The file input should have accept="image/*" attribute
-        cy.get('input[type="file"]').should('have.attr', 'accept', 'image/*');
-
-        // Note: Browser file picker restrictions are hard to test in Cypress
-        // This test verifies the HTML attribute is set correctly
-    });
-
-    it('should display current total size correctly', () => {
-        const fileContent = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/2wBDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwA/8A';
-
-        cy.get('input[type="file"]').selectFile({
-            contents: Cypress.Buffer.from(fileContent.split(',')[1], 'base64'),
-            fileName: 'test.jpg',
-            mimeType: 'image/jpeg'
-        }, { force: true });
-        cy.wait(500);
-
-        // Verify size display format
-        cy.contains('Total size:').should('be.visible');
-        cy.contains('/ 100 MB').should('be.visible');
-    });
+  });
+
+  it("should close the lightbox when the close button is clicked", () => {
+    // Open the first approved image
+    cy.get('button[aria-label^="Enlarge gallery image"]').first().click();
+
+    // Verify the lightbox is open
+    cy.get('[role="dialog"]').should("be.visible");
+
+    // Click the close button
+    cy.get('button[aria-label="Close enlarged image"]').click();
+
+    // Verify the lightbox has been removed
+    cy.get('[role="dialog"]').should("not.exist");
+  });
+
+  it("should close the lightbox when clicking outside the image", () => {
+    // Open the first approved image
+    cy.get('button[aria-label^="Enlarge gallery image"]').first().click();
+
+    // Verify the lightbox is open
+    cy.get('[role="dialog"]').should("be.visible");
+
+    // Click the dark background outside the image
+    cy.get('[role="presentation"]').last().click("topLeft");
+
+    // Verify the lightbox closes
+    cy.get('[role="dialog"]').should("not.exist");
+  });
+
+  it("should close the lightbox when Escape is pressed", () => {
+    // Open the first approved image
+    cy.get('button[aria-label^="Enlarge gallery image"]').first().click();
+
+    // Verify the lightbox is open
+    cy.get('[role="dialog"]').should("be.visible");
+
+    // Press Escape to close the lightbox
+    cy.get("body").type("{esc}");
+
+    // Verify the lightbox closes
+    cy.get('[role="dialog"]').should("not.exist");
+  });
+
+  it("should enlarge the correct gallery image", () => {
+    // Get the source URL of the first approved image
+    cy.get('img[alt^="Verified"]')
+      .first()
+      .invoke("attr", "src")
+      .then((originalSrc) => {
+        // Click the first approved image
+        cy.get('button[aria-label^="Enlarge gallery image"]').first().click();
+
+        // Verify the enlarged image uses the same source URL
+        cy.get('[role="dialog"]')
+          .find('img[alt="Enlarged gallery photograph"]')
+          .should("have.attr", "src", originalSrc);
+      });
+  });
+
+  //TODO: Add tests for the upload section once backend upload functionality is implemented.
 });
