@@ -1,7 +1,7 @@
 module.exports = {
   apps : [{
     name   : "vite",
-    script : "npm vite"
+    script : "npm --env-file='.env' vite"
   },{
     name   : "server.cjs",
     script : "node server.cjs"
