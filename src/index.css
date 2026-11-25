@@ -1,4 +1,14 @@
-﻿@config "../tailwind.config.js";
+﻿/**
+ * @file Index.css
+ * @description Global and responsive styling for the Woodland Conservation Site, including dark mode and navigation responsiveness.
+ * This file uses Tailwind CSS for utilities and extends global styles for custom elements.
+ *
+ * Author: Raish Raj Joshi,, Ashesh Pahari
+ *         Mohammad Zaid Khan - Fixed dark mode.
+ * Author: Jaden Eisenhauer - removed code that was no-longer needed, Ashesh Pahari
+ * Author: Samson Mate - Custom Cursor, Ashesh Pahari
+ */
+@config "../tailwind.config.js";
 @import "tailwindcss";
 
 html {
@@ -126,3 +136,5 @@ nav a.active {
     box-sizing: border-box;
   }
 }
+
+

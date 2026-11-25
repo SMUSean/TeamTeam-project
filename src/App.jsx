@@ -1,4 +1,9 @@
-﻿import React, { useEffect, useRef, useState } from "react";
+﻿/**
+ * @file App.js
+ * @description The main application entry point that renders the Navbar and manages routes for various pages of the Woodland Conservation Site.
+ * @author Raish Raj Joshi, Lee Jonah, Ashesh Pahari
+ */
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Navbar, Footer } from "./Components/navbar";
 import Home from "./pages/Home";
@@ -14,6 +19,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import { warmAppCache } from "./utils/assetCache";
 
+// All routed pages kept mounted once visited so switching tabs is instantaneous
 const ROUTE_COMPONENTS = [
   { path: "/", Component: Home },
   { path: "/about", Component: About },
@@ -28,6 +34,7 @@ const ROUTE_COMPONENTS = [
   { path: "/signup", Component: Signup },
 ];
 
+// Left-to-right navbar order used to calculate horizontal slide direction
 const NAV_ORDER = [
   "/",
   "/about",
@@ -40,6 +47,7 @@ const NAV_ORDER = [
   "/sitemap",
 ];
 
+// Pages pre-mounted during browser idle time (SiteMap excluded until clicked so Maps loads on demand)
 const PREMOUNT_PATHS = [
   "/",
   "/about",
@@ -57,6 +65,7 @@ function App() {
   const [visitedPaths, setVisitedPaths] = useState(() => new Set([currentPath]));
   const prevPathRef = useRef(currentPath);
 
+  // Track newly visited routes so they stay cached in the DOM
   useEffect(() => {
     setVisitedPaths((prev) => {
       if (prev.has(currentPath)) return prev;
@@ -66,6 +75,7 @@ function App() {
     });
   }, [currentPath]);
 
+  // Determine slide direction based on navbar tab order
   const prevPath = prevPathRef.current;
   const oldIdx = NAV_ORDER.indexOf(prevPath);
   const newIdx = NAV_ORDER.indexOf(currentPath);
@@ -83,6 +93,7 @@ function App() {
     }
   }, [currentPath]);
 
+  // Preload static images and pre-mount standard tabs when the main thread is idle
   useEffect(() => {
     warmAppCache();
 
@@ -130,4 +141,5 @@ function App() {
 }
 
 export default App;
+
 

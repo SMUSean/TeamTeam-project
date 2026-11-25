@@ -4,7 +4,7 @@
  * Options:
  *  - defaultCenter, defaultZoom
  *  - userZoom
- *  - trackUser (boolean) â€“ if true, continuously tracks user location
+ *  - trackUser (boolean) ΓÇô if true, continuously tracks user location
  *
  * Returns:
  *  - center, zoom
@@ -13,7 +13,7 @@
  *  - permissionState: "granted" | "prompt" | "denied" | null
  *  - userLocation: { lat, lng } | null
  * 
- * @author Afif Mahmud
+ * @author Afif Mahmud, Ashesh Pahari
  */
 import { useEffect, useState, useRef } from "react";
 
@@ -134,4 +134,6 @@ export function useGeolocation({ defaultCenter, defaultZoom, userZoom, trackUser
         userLocation,
     };
 }
+
+
 

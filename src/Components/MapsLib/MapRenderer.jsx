@@ -11,9 +11,8 @@
  * - User location tracking
  * - Interactive toolbars and controls
  * 
- * @author Afif Mahmud
+ * @author Afif Mahmud, Ashesh Pahari
  */
-
 import React from "react";
 import {
     GoogleMap,
@@ -437,5 +436,7 @@ export default function MapRenderer({
         </div>
     );
 }
+
+
 
 

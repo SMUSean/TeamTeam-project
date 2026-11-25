@@ -1,9 +1,8 @@
 ﻿/**
  * @file Weather.js
  * @description React component to display weather information based on latitude and longitude using the OpenWeatherMap API.
- * @author Alexander Colpitts
+ * @author Alexander Colpitts, Ashesh Pahari
  */
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -58,3 +57,5 @@ const Weather = ({ lat, lon }) => {
 };
 
 export default Weather;
+
+

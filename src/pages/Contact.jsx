@@ -1,4 +1,18 @@
-﻿import React, { useState } from "react";
+﻿/*
+   This is the main component that will be rendered when the user navigates to the /contact route.
+    It contains a form that allows users to submit inquiries to the website admin.
+    The form includes fields for the user's full name, email address, inquiry type, and message.
+    The user must verify their email address by entering an OTP sent to their email before submitting the form.
+    The form data is validated on the client-side before submission.
+    If the form is successfully submitted, a confirmation email is sent to the user.
+    The form uses Axios to make HTTP requests to the backend server for sending OTP and confirmation emails.
+    The backend server code for handling these requests is provided in the OTPserver/server.js file.
+    The form includes error handling for invalid input and displays error messages to the user.
+    The form also includes a success message when the form is successfully submitted.
+    
+    Author: Mohammad Zaid Khan, Jaden Eisenhauer, Ashesh Pahari
+ */
+import React, { useState } from "react";
 import axios from "axios";
 
 const InquiryForm = () => {
@@ -15,11 +29,13 @@ const InquiryForm = () => {
   const [submitted, setSubmitted] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
 
+  // Validate standard email format before requesting an OTP
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
+  // Step 1: Request a verification OTP code for the entered email address
   const handleSendOtp = async () => {
     if (!validateEmail(formData.email)) {
       setErrors({ ...errors, email: "Invalid Email format" });
@@ -39,6 +55,7 @@ const InquiryForm = () => {
     }
   };
 
+  // Step 2: Verify the user-entered OTP against the backend before allowing submit
   const verifyOtp = async () => {
     try {
       const response = await axios.post("http://localhost:3069/verify-otp", {
@@ -54,6 +71,7 @@ const InquiryForm = () => {
     }
   };
 
+  // Step 3: Validate all required fields and send confirmation email
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -158,7 +176,7 @@ const InquiryForm = () => {
             )}
           </div>
 
-          {/* Email & OTP Verification */}
+          {/* Email & Inline OTP Verification */}
           <div>
             <label htmlFor="email" className="block text-sm font-semibold mb-1.5">
               Email Address
@@ -258,7 +276,7 @@ const InquiryForm = () => {
             )}
           </div>
 
-          {/* Message */}
+          {/* Message with Live Character Counter */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
               <label htmlFor="message" className="block text-sm font-semibold">
@@ -302,3 +320,5 @@ const InquiryForm = () => {
 };
 
 export default InquiryForm;
+
+

@@ -1,9 +1,14 @@
 ﻿/**
  * @file Navbar.jsx
- * @description Navigation bar with sliding active indicator pill, dark mode toggle,
- * weather widget, login/signup links, and responsive mobile drawer.
+ * @description A React functional component that serves as the navigation
+ * bar for the application, including dark mode toggle, navigation links,
+ * and social media integration.
+ * The component also includes a weather widget and responsive design.
+ *
+ * @module Navbar
+ *
+ * @author Raish Raj Joshi, Tania Terence, Freddy Rideout, Lee Jonah, Ashesh Pahari
  */
-
 import { useRef, useState, useEffect, useCallback } from "react";
 import {
   FaBars,
@@ -287,3 +292,5 @@ function Footer() {
 }
 
 export { Footer, Navbar };
+
+

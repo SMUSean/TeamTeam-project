@@ -1,9 +1,8 @@
 ﻿/**
  * Purpose: Main component displaying information about Natural Burial.
  * Parameters: None
- * @author Thomas Lama, Freddy Rideout, Jaden Eisenhauer
+ * @author Thomas Lama, Freddy Rideout, Jaden Eisenhauer, Ashesh Pahari
  */
-
 import React, { useEffect, useRef, useState } from "react";
 import { FaVolumeUp, FaPause } from "react-icons/fa"; // Import icons from react-icons
 import backGmarker from "../assets/backGmarker.jpg"; // Import the background image for Marker Options
@@ -373,4 +372,6 @@ function NaturalBurial() {
 }
 
 export default NaturalBurial;
+
+
 

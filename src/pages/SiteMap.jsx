@@ -7,9 +7,8 @@
  * The page uses a full viewport height layout to maximize map visibility and
  * prevent scrolling, ensuring the map component has proper dimensions for rendering.
  * 
- * @author Afif Mahmud
+ * @author Afif Mahmud, Ashesh Pahari
  */
-
 import React from "react";
 import GoogleMapView from "../Components/GoogleMapView.jsx";
 
@@ -51,4 +50,6 @@ export default function SiteMapPage() {
         </div>
     );
 }
+
+
 

@@ -1,4 +1,8 @@
-﻿import deer from "../assets/deer.jpg";
+﻿/**
+ * @file assetCache.js
+ * @author Ashesh Pahari
+ */
+import deer from "../assets/deer.jpg";
 import fern from "../assets/fern.png";
 import lake from "../assets/lake.jpg";
 import heron from "../assets/heron.jpg";
@@ -79,3 +83,5 @@ export function warmAppCache() {
   STATIC_ASSETS.forEach(preloadAndDecodeImage);
   fetchAndCacheGalleryImages().catch(() => {});
 }
+
+

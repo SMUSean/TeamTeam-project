@@ -1,4 +1,8 @@
-﻿import { useState } from "react";
+﻿/**
+ * Purpose: React component containing functionality and styles(Tailwind) for the About Page of the website, including a Text-to-Speech feature for the page's textual content.
+ * @author Tania Terence, Jaden Eisenhauer, Ashesh Pahari
+ */
+import { useState } from "react";
 import { FaVolumeUp, FaPause } from "react-icons/fa";
 
 const ABOUT_TEXT =
@@ -13,6 +17,11 @@ const MISSION_TEXT =
 const About = () => {
   const [speakingText, setSpeakingText] = useState("");
 
+  /**
+   * Toggles Canadian-English speech synthesis for the selected section text.
+   * @author Raish Raj Joshi
+   * @param {string} text - Section text to read aloud.
+   */
   const handleSpeakText = (text) => {
     if (speakingText === text) {
       window.speechSynthesis.cancel();
@@ -137,3 +146,5 @@ const About = () => {
 };
 
 export default About;
+
+

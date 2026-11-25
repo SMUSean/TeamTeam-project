@@ -13,9 +13,8 @@
  * - Manages audio narration for markers and proximity-based audio
  * - Provides toggle controls for map layer visibility
  * 
- * @author Afif Mahmud
+ * @author Afif Mahmud, Ashesh Pahari
  */
-
 import React, {
     useCallback,
     useEffect,
@@ -327,5 +326,7 @@ export default function GoogleMapView() {
         />
     );
 }
+
+
 
 

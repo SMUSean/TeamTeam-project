@@ -1,6 +1,6 @@
 ﻿/**
  * ============================================================
- *  VerifiedGallery Component â€“ Saint Margaretâ€™s Bay Area Gallery
+ *  VerifiedGallery Component ΓÇô Saint MargaretΓÇÖs Bay Area Gallery
  *  ------------------------------------------------------------
  *  Description:
  *  The VerifiedGallery component renders all approved images in
@@ -25,14 +25,11 @@
  *   @param {string[]} props.images - Array of verified image URLs (typically served from /api/gallery/approved).
  *
  *  Authors
- *   @author Samson Mate (A00476626)
- *   @author Lee Jonah
+ *   @author Samson Mate (A00476626), Ashesh Pahari
+ *   @author Lee Jonah, Ashesh Pahari
  *   @lastupdated November 2026
  * ============================================================
  */
-
-
-
 import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import ImageCard from "./ImageCard";
@@ -156,6 +153,8 @@ export default function VerifiedGallery({ images }) {
     </section>
   );
 }
+
+
 
 
 

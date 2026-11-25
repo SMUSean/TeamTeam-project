@@ -1,4 +1,9 @@
-﻿import React from "react";
+﻿/**
+ * @file Ecommerce.jsx
+ * @description eCommerce page for purchasing local, eco-friendly products/services.
+ * @author Yilin Huang, Jaden Eisenhauer, Ashesh Pahari
+ */
+import React from "react";
 import fern from "../assets/fern.png";
 import heron from "../assets/heron.jpg";
 
@@ -63,3 +68,5 @@ export default function Ecommerce() {
     </div>
   );
 }
+
+

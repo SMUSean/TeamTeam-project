@@ -1,4 +1,10 @@
-﻿import React, { useState } from "react";
+﻿/**
+ * @file Ecosystem.js
+ * @description React page/component for displaying information about the Woodland Conservation Site's ecosystem. Includes text-to-speech functionality and interactive visuals for flora, fauna, and fungi.
+ * @author Alexander Colpitts, Freddy Rideout, Jaden Eisenhauer, Ashesh Pahari
+ *
+ */
+import React, { useState } from "react";
 import { IoPaw } from "react-icons/io5";
 import { PiPlantFill } from "react-icons/pi";
 import { TbMushroomFilled, TbTrees } from "react-icons/tb";
@@ -12,6 +18,11 @@ import coyote from "../assets/coyote.jpg";
 const Ecosystem = () => {
   const [speakingText, setSpeakingText] = useState("");
 
+  /**
+   * Toggles text-to-speech narration for the selected ecosystem item.
+   * @author Raish Raj Joshi
+   * @param {string} text - Description text to speak aloud.
+   */
   const handleSpeakText = (text) => {
     if (speakingText === text) {
       window.speechSynthesis.cancel();
@@ -28,6 +39,7 @@ const Ecosystem = () => {
     }
   };
 
+  // Wildlife species rendered in a balanced 3-column row of 3D flip cards
   const wildlifeCards = [
     {
       name: "Great Blue Heron",
@@ -287,3 +299,5 @@ const Ecosystem = () => {
 };
 
 export default Ecosystem;
+
+

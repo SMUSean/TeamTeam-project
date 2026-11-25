@@ -1,11 +1,15 @@
-﻿import React from "react";
+﻿/**
+ * @file Home.jsx
+ * @author Ashesh Pahari
+ */
+import React from "react";
 import { Link } from "react-router-dom";
 import firstpic from "../assets/firstpic.jpg";
 
 export default function Home() {
   return (
     <div className="relative min-h-[90vh] flex flex-col items-center justify-start text-light-text dark:text-dark-text bg-gradient-to-b from-light-border via-light-background to-light-border dark:from-gray-900 dark:via-dark-background dark:to-gray-900 pb-20">
-      {/* Hero Banner Section with Shading Vignette */}
+      {/* Hero Banner Section with Gradient Vignette */}
       <div className="relative w-full h-[60vh] min-h-[420px] overflow-hidden shadow-2xl">
         <img
           src={firstpic}
@@ -68,3 +72,5 @@ export default function Home() {
     </div>
   );
 }
+
+

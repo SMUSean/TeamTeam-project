@@ -1,4 +1,9 @@
-﻿import { useState } from "react";
+﻿/**
+ * @file Signup.jsx
+ * @description Signup page for the Woodland Conservation Site. This component provides a user interface for users to create an account with their email and password. It includes form validation and a toggle for showing/hiding the password.
+ * @author Lee Jonah, Ashesh Pahari
+ */
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaCheckCircle, FaRegCircle, FaTimesCircle } from "react-icons/fa";
 
@@ -16,6 +21,7 @@ function Signup() {
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
 
+  // Live password complexity checks evaluated on every keystroke
   const passwordRules = [
     { label: "At least 8 characters", valid: password.length >= 8 },
     {
@@ -34,6 +40,7 @@ function Signup() {
   const passwordsMatch = hasConfirmInput && password === confirmPassword;
   const passwordsMismatch = hasConfirmInput && password !== confirmPassword;
 
+  // Enforce password complexity and confirmation match before submission
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -228,6 +235,7 @@ function Signup() {
               </button>
             </div>
 
+            {/* Live Password Match Indicator (neutral when empty, red when mismatched, green when matched) */}
             <div
               className={`mt-2 flex items-center gap-2 text-xs transition-colors ${
                 passwordsMatch
@@ -287,3 +295,5 @@ function Signup() {
 }
 
 export default Signup;
+
+

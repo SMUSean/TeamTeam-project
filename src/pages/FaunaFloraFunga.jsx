@@ -1,4 +1,9 @@
-﻿import React from "react";
+﻿/**
+ * @file FaunaFloraFunga.jsx
+ * @description FFF page, required by terry's software requirement document.
+ * @author Yilin Huang, Jaden Eisenhauer, Ashesh Pahari
+ */
+import React from "react";
 import { FaVolumeUp } from "react-icons/fa";
 import "../index.css";
 
@@ -35,6 +40,7 @@ function FaunaFloraFunga() {
         Explore the wonders of woodland life across animals, plants, and forest fungi.
       </p>
 
+      {/* Responsive 3-column card grid for Fauna, Flora, and Funga */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl">
         {cards.map((card) => (
           <div
@@ -77,3 +83,5 @@ function FaunaFloraFunga() {
 }
 
 export default FaunaFloraFunga;
+
+

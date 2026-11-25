@@ -1,4 +1,23 @@
-﻿export const MAP_MARKERS = {
+﻿/**
+ * Map configuration
+ *
+ * This file is the ONLY place an end user needs to touch to:
+ *  - Define which markers (points of interest) appear on the map
+ *  - Control trails between markers
+ *  - Define park / region polygons
+ *  - Control default zoom, centering, colors, and pin styles
+ *
+ * No React components need to be edited to:
+ *  - Add / remove markers
+ *  - Change trail connections
+ *  - Change pin visibility, colors, or styles
+ *  - Change regions (zones) on the map
+ *
+ * All structures below are *pure data* and are read by the map library at runtime.
+ * 
+ * @author Afif Mahmud, Ashesh Pahari
+ */
+export const MAP_MARKERS = {
     lewisLakeTrailhead: {
         id: "lewis-lake-trailhead",
         position: {
@@ -440,4 +459,6 @@ export const MAP_LEGEND = {
         colorClass: "bg-orange-500",
     },
 };
+
+
 

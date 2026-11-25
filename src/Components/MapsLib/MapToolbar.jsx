@@ -3,9 +3,8 @@
  * @description Toolbar component providing toggle controls for map layer visibility.
  * Allows users to show/hide regions, trails, Google markers, and user tracking.
  * 
- * @author Afif Mahmud
+ * @author Afif Mahmud, Ashesh Pahari
  */
-
 import React from "react";
 
 export default function MapToolbar({
@@ -70,4 +69,6 @@ export default function MapToolbar({
         </div>
     );
 }
+
+
 

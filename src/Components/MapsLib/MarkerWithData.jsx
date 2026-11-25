@@ -1,4 +1,10 @@
-﻿import React, { useState } from "react";
+﻿/**
+ * @file MarkerWithData.jsx
+ * @description Component that renders a map marker with associated data, place details, and interactive features.
+ * 
+ * @author Afif Mahmud, Ashesh Pahari
+ */
+import React, { useState } from "react";
 import { Marker, InfoWindow } from "@react-google-maps/api";
 
 import { usePlaceDetails, useStaticMarkerDetails } from "./placeDetails";
@@ -6,6 +12,7 @@ import Hovercard from "./hovercard";
 import MarkerDetailModal from "./MarkerDetailModal";
 import { getPinIcon } from "./config";
 
+// Prefer live Google Places details when available; otherwise fall back to static marker config
 function buildMarkerModel(markerConfig, placeData, fallbackData) {
     const hasPlaceQuery =
         typeof markerConfig.placeQuery === "string" &&
@@ -75,6 +82,7 @@ export default function MarkerWithData({
         return null;
     }
 
+    // Resolve native Google Maps pin icon (defaults to standard red pin)
     const icon =
         getPinIcon(markerConfig.pinStyle, markerConfig.pinColor) || undefined;
 
@@ -91,6 +99,7 @@ export default function MarkerWithData({
 
     return (
         <>
+            {/* Native Google Maps Marker with hover-based InfoWindow */}
             <Marker
                 key={model.id}
                 position={model.position}
@@ -146,3 +155,5 @@ export default function MarkerWithData({
         </>
     );
 }
+
+
