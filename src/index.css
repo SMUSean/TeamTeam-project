@@ -1,107 +1,78 @@
-/**
- * @file Index.css
- * @description Global and responsive styling for the Woodland Conservation Site, including dark mode and navigation responsiveness.
- * This file uses Tailwind CSS for utilities and extends global styles for custom elements.
- *
- * Author: Raish Raj Joshi,
- *         Mohammad Zaid Khan - Fixed dark mode.
- * Author: Jaden Eisenhauer - removed code that was no-longer needed
- * Author: Samson Mate - Custom Cursor
- */
-@config "../tailwind.config.js";
+﻿@config "../tailwind.config.js";
 @import "tailwindcss";
+
+html {
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
+}
 
 * {
   box-sizing: border-box;
-  font-family: "Calibri", sans-serif; /* Global font family */
-  font-weight: 300;
+  font-family: "Plus Jakarta Sans", "Inter", system-ui, -apple-system, sans-serif;
   line-height: 1.5;
-  @apply transition-colors duration-200; /* Smooth color transitions */
-  cursor: none !important; /* Hide default cursor */
 }
 
-/* ============================================================
- * Custom Cursor Styles
- * ------------------------------------------------------------
- * Creates a custom cursor that replaces the default browser cursor.
- * The cursor appears as a larger pointer arrow pointing to the right,
- * with a black outline and a light yellow/khaki center (dark mode text color).
- * 
- * Implementation Details:
- * - Uses CSS border trick to create triangle arrow shape
- * - ::before creates the outer black border
- * - ::after creates the inner fill with dark mode text color (#f0E68C)
- * - Rotated 45 degrees to point right (90 degrees clockwise from up)
- * - Positioned absolutely and follows mouse via JavaScript
- * 
- * @author Samson Mate
- * ============================================================ */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
 
-.custom-cursor {
-  /* Fixed positioning allows cursor to follow mouse anywhere on screen */
+/* Theme Shutter Overlay to prevent white-flash blinding */
+#theme-shutter {
   position: fixed;
-  /* Zero dimensions - actual shape created via pseudo-elements */
-  width: 0;
-  height: 0;
-  /* Prevent cursor from intercepting mouse events */
+  inset: 0;
+  z-index: 999999;
+  background-color: #2A2030;
+  opacity: 0;
   pointer-events: none;
-  /* Ensure cursor appears above all other content */
-  z-index: 2147483647;
-  /* Center horizontally on mouse position (tip of arrow at cursor) */
-  transform: translate(-50%, 0);
-  /* Smooth fade in/out when visibility changes */
-  transition: opacity 0.2s ease;
+  transition: opacity 280ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Outer arrow (black outline) - creates the pointer shape */
-/* Uses CSS border trick: transparent borders create triangle shape */
-.custom-cursor::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 0;
-  height: 0;
-  /* Create triangle pointing up-left, then rotate 45deg to point right */
-  /* Top and left borders are solid black, creating the arrow outline */
-  border-top: 4px solid #000000;
-  border-right: 4px solid transparent;
-  border-bottom: 28px solid transparent;
-  border-left: 28px solid #000000;
-  /* Rotate 45 degrees clockwise from up-left to point right */
-  transform: rotate(45deg);
-  /* Rotation origin at top-left corner (arrow tip) */
-  transform-origin: 0 0;
+html.shutter-active #theme-shutter {
+  opacity: 1;
+  pointer-events: auto;
 }
 
-/* Inner arrow (dark mode text color #f0E68C) - fills the cursor */
-/* Slightly smaller and offset to create the filled appearance */
-.custom-cursor::after {
-  content: '';
-  position: absolute;
-  top: 1px;   /* Slight offset to create border effect */
-  left: 1px;  /* Slight offset to create border effect */
-  width: 0;
-  height: 0;
-  /* Inner fill using dark mode text color for visibility */
-  border-top: 3px solid #f0E68C;
-  border-right: 3px solid transparent;
-  border-bottom: 24px solid transparent;
-  border-left: 24px solid #f0E68C;
-  /* Same rotation as outer arrow */
-  transform: rotate(45deg);
-  transform-origin: 0 0;
+/* Instant-paint directional micro-glide synced with navbar pill */
+@keyframes tabEnterFade {
+  from { opacity: 0.4; }
+  to { opacity: 1; }
 }
 
-/* Hide custom cursor on mobile/touch devices */
-@media (hover: none) and (pointer: coarse) {
-  * {
-    cursor: auto !important;
+@keyframes tabEnterRight {
+  from {
+    opacity: 0.4;
+    transform: translate3d(10px, 0, 0);
   }
-  
-  .custom-cursor {
-    display: none;
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
   }
+}
+
+@keyframes tabEnterLeft {
+  from {
+    opacity: 0.4;
+    transform: translate3d(-10px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.tab-enter-fade {
+  animation: tabEnterFade 140ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.tab-enter-right {
+  will-change: transform, opacity;
+  animation: tabEnterRight 160ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.tab-enter-left {
+  will-change: transform, opacity;
+  animation: tabEnterLeft 160ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* Navigation Links */

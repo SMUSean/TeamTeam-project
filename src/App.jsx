@@ -1,71 +1,133 @@
-/**
- * @file App.js
- * @description The main application entry point that renders the Navbar and manages routes for various pages of the Woodland Conservation Site.
- * @author Raish Raj Joshi, Lee Jonah
- */
-
-import React from "react";
-import { Navbar, Footer } from "./Components/navbar"; // Navbar and Footer components for consistent site navigation and footer layout.
-import Home from "./pages/Home"; // Home page component.
-import About from "./pages/About"; // About page component.
-import Ecosystem from "./pages/Ecosystem"; // Ecosystem page component.
-import Gallery from "./pages/Gallery"; // Gallery page component.
-import NaturalBurial from "./pages/NaturalBurial"; // Natural Burial page component.
-import Contact from "./pages/Contact"; // Contact page component.
-import Ecommerce from "./pages/Ecommerce"; // eCommerce page component
-import { Route, Routes } from "react-router-dom"; // Routing utilities from react-router-dom.
-import FaunaFloraFunga from "./pages/FaunaFloraFunga"; // Fauna/Flora/Funga page component
-import SiteMap from "./pages/SiteMap.jsx" // Site Map page component.
-import CustomCursor from "./Components/CustomCursor.jsx"; // Custom cursor component
+﻿import React, { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { Navbar, Footer } from "./Components/navbar";
+import Home from "./pages/Home";
+import About from "./pages/About";
+import Ecosystem from "./pages/Ecosystem";
+import Gallery from "./pages/Gallery";
+import NaturalBurial from "./pages/NaturalBurial";
+import Contact from "./pages/Contact";
+import Ecommerce from "./pages/Ecommerce";
+import FaunaFloraFunga from "./pages/FaunaFloraFunga";
+import SiteMap from "./pages/SiteMap.jsx";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import { warmAppCache } from "./utils/assetCache";
 
-/**
- * @function App
- * @description The main React component that defines the structure of the application.
- * It includes a navigation bar, footer, and routing for various site pages.
- *
- * @returns {JSX.Element} - The rendered application structure.
- */
+const ROUTE_COMPONENTS = [
+  { path: "/", Component: Home },
+  { path: "/about", Component: About },
+  { path: "/ecosystem", Component: Ecosystem },
+  { path: "/gallery", Component: Gallery },
+  { path: "/faunaflorafunga", Component: FaunaFloraFunga },
+  { path: "/naturalburial", Component: NaturalBurial },
+  { path: "/contacts", Component: Contact },
+  { path: "/ecommerce", Component: Ecommerce },
+  { path: "/sitemap", Component: SiteMap },
+  { path: "/login", Component: Login },
+  { path: "/signup", Component: Signup },
+];
+
+const NAV_ORDER = [
+  "/",
+  "/about",
+  "/ecosystem",
+  "/gallery",
+  "/faunaflorafunga",
+  "/naturalburial",
+  "/contacts",
+  "/ecommerce",
+  "/sitemap",
+];
+
+const PREMOUNT_PATHS = [
+  "/",
+  "/about",
+  "/ecosystem",
+  "/gallery",
+  "/faunaflorafunga",
+  "/naturalburial",
+  "/contacts",
+  "/ecommerce",
+];
+
 function App() {
+  const location = useLocation();
+  const currentPath = location.pathname.toLowerCase();
+  const [visitedPaths, setVisitedPaths] = useState(() => new Set([currentPath]));
+  const prevPathRef = useRef(currentPath);
+
+  useEffect(() => {
+    setVisitedPaths((prev) => {
+      if (prev.has(currentPath)) return prev;
+      const next = new Set(prev);
+      next.add(currentPath);
+      return next;
+    });
+  }, [currentPath]);
+
+  const prevPath = prevPathRef.current;
+  const oldIdx = NAV_ORDER.indexOf(prevPath);
+  const newIdx = NAV_ORDER.indexOf(currentPath);
+  const direction =
+    prevPath !== currentPath && oldIdx !== -1 && newIdx !== -1
+      ? newIdx > oldIdx
+        ? 1
+        : -1
+      : 0;
+
+  useEffect(() => {
+    prevPathRef.current = currentPath;
+    if (window.scrollY > 0) {
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+  }, [currentPath]);
+
+  useEffect(() => {
+    warmAppCache();
+
+    const preMount = () => {
+      setVisitedPaths((prev) => {
+        const next = new Set(prev);
+        PREMOUNT_PATHS.forEach((p) => next.add(p));
+        return next;
+      });
+    };
+
+    if ("requestIdleCallback" in window) {
+      const id = window.requestIdleCallback(preMount, { timeout: 1000 });
+      return () => window.cancelIdleCallback(id);
+    } else {
+      const timer = window.setTimeout(preMount, 500);
+      return () => window.clearTimeout(timer);
+    }
+  }, []);
+
+  const enterClass =
+    direction > 0
+      ? "tab-enter-right"
+      : direction < 0
+      ? "tab-enter-left"
+      : "tab-enter-fade";
+
   return (
     <div className="flex flex-col min-h-screen font-sans">
-      {" "}
-      {/* Container for the entire application */}
-      {/* Custom Cursor */}
-      <CustomCursor /> {/* Custom cursor that follows the mouse */}
-      {/* Navbar */}
-      <Navbar /> {/* Displays the navigation bar */}
-      {/* Main Content */}
-      <main className="grow bg-light-border dark:bg-dark-background">
-        {" "}
-        {/* Main area for routing different pages */}
-        <Routes>
-          {" "}
-          {/* Define application routes */}
-          <Route path="/" element={<Home />} /> {/* Route for the Home page */}
-          <Route path="/about" element={<About />} />{" "}
-          {/* Route for the About page */}
-          <Route path="/gallery" element={<Gallery />} />{" "}
-          {/* Route for the Gallery page */}
-          <Route path="/ecosystem" element={<Ecosystem />} />{" "}
-          {/* Route for the Ecosystem page */}
-          <Route path="/NaturalBurial" element={<NaturalBurial />} />{" "}
-          {/* Route for the Natural Burial page */}
-          <Route path="/contacts" element={<Contact />} />{" "}
-          {/* Route for the Contact page */}
-          <Route path="/ecommerce" element={<Ecommerce />} /> {/* Route for the eCommerce page */}
-          <Route path="/faunaflorafunga" element={<FaunaFloraFunga />} /> {/* Route for the Fauna/Flora/Funga page */}
-          <Route path="/sitemap" element={<SiteMap/>}/>{" "}
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          {/* Route for the Site Map page */}
-        </Routes>
+      <Navbar />
+      <main className="grow bg-light-border dark:bg-dark-background overflow-x-clip">
+        {ROUTE_COMPONENTS.map(({ path, Component }) => {
+          if (!visitedPaths.has(path) && currentPath !== path) return null;
+          const isActive = currentPath === path;
+          return (
+            <div key={path} className={isActive ? `block ${enterClass}` : "hidden"}>
+              <Component />
+            </div>
+          );
+        })}
       </main>
-      {/* Footer */}
-      <Footer /> {/* Displays the footer */}
+      <Footer />
     </div>
   );
 }
 
 export default App;
+

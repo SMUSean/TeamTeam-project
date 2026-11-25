@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file Weather.js
  * @description React component to display weather information based on latitude and longitude using the OpenWeatherMap API.
  * @author Alexander Colpitts
@@ -13,24 +13,14 @@ import axios from "axios";
  * @param {Object} props - Component properties.
  * @param {number} props.lat - Latitude of the location.
  * @param {number} props.lon - Longitude of the location.
- * @returns {JSX.Element} A component displaying the current weather information.
+ * @returns {JSX.Element} A component displaying current weather and location name.
  */
 const Weather = ({ lat, lon }) => {
-  /**
-   * State to store weather data fetched from the API.
-   * @type {[Object|null, Function]}
-   */
   const [weatherData, setWeatherData] = useState(null);
 
-  /**
-   * Effect to fetch weather data when latitude or longitude changes.
-   */
   useEffect(() => {
-    /**
-     * Fetches weather data from OpenWeatherMap API.
-     */
     const fetchWeather = async () => {
-      const apiKey = "a4e6fe71ffee099c42d6f4423e41b57a"; // Unique API Key received from OpenWeatherMap
+      const apiKey = "a4e6fe71ffee099c42d6f4423e41b57a";
       try {
         const response = await axios.get(
           `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`
@@ -44,20 +34,25 @@ const Weather = ({ lat, lon }) => {
     fetchWeather();
   }, [lat, lon]);
 
-  // Show loading message while data is being fetched
   if (!weatherData) {
-    return <p>Loading...</p>;
+    return <p className="text-xs">Loading weather...</p>;
   }
 
-  // Extract temperature and icon URL from weather data
   const temp = Math.round(weatherData.main.temp);
   const iconUrl = `https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`;
+  const locationName = weatherData.name;
 
   return (
-    <div className="flex flex-col items-center space-y-1">
-      {/* Weather Display */}
-      <img src={iconUrl} alt="Weather Icon" className="w-8 h-8" />
-      <span className="text-sm font-medium">{temp}°C</span>
+    <div className="flex flex-col items-center space-y-0 leading-tight">
+      <div className="flex items-center space-x-1">
+        <img src={iconUrl} alt="Weather Icon" className="w-7 h-7 -my-1" />
+        <span className="text-sm font-semibold">{temp}°C</span>
+      </div>
+      {locationName && (
+        <span className="text-[10px] opacity-80 tracking-tight whitespace-nowrap">
+          {locationName}
+        </span>
+      )}
     </div>
   );
 };

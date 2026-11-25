@@ -1,10 +1,10 @@
-/**
+﻿/**
  * Handles browser geolocation and permission state.
  *
  * Options:
  *  - defaultCenter, defaultZoom
  *  - userZoom
- *  - trackUser (boolean) – if true, continuously tracks user location
+ *  - trackUser (boolean) â€“ if true, continuously tracks user location
  *
  * Returns:
  *  - center, zoom
@@ -65,7 +65,7 @@ export function useGeolocation({ defaultCenter, defaultZoom, userZoom, trackUser
             const location = { lat: latitude, lng: longitude };
             setUserLocation(location);
             
-            if (!trackUser) {
+            if (trackUser) {
                 // Only update center/zoom on initial load if not tracking
                 setCenter(location);
                 setZoom(userZoom ?? defaultZoom);
@@ -134,3 +134,4 @@ export function useGeolocation({ defaultCenter, defaultZoom, userZoom, trackUser
         userLocation,
     };
 }
+

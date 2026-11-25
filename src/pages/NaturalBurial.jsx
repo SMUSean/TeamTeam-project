@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Purpose: Main component displaying information about Natural Burial.
  * Parameters: None
  * @author Thomas Lama, Freddy Rideout, Jaden Eisenhauer
@@ -64,7 +64,7 @@ function NaturalBurial() {
         setIsNaturalInView(entry.isIntersecting); // Update visibility state
       },
       {
-        threshold: 0.5, // Trigger when 50% of the section is visible
+        threshold: 0.15, // Trigger when 50% of the section is visible
       }
     );
 
@@ -87,7 +87,7 @@ function NaturalBurial() {
         setIsBurialOptionsInView(entry.isIntersecting); // Update visibility state
       },
       {
-        threshold: 0.5, // Trigger when 50% of the section is visible
+        threshold: 0.15, // Trigger when 50% of the section is visible
       }
     );
 
@@ -110,7 +110,7 @@ function NaturalBurial() {
         setIsMarkerOptionsInView(entry.isIntersecting); // Update visibility state
       },
       {
-        threshold: 0.5, // Trigger when 50% of the section is visible
+        threshold: 0.15, // Trigger when 50% of the section is visible
       }
     );
 
@@ -127,7 +127,7 @@ function NaturalBurial() {
   }, []);
 
   return (
-    <div className="w-full bg-linear-to-r from-light-background to-light-border dark:from-dark-background dark:to-dark-border 
+    <div className="w-full bg-gradient-to-r from-light-background to-light-border dark:from-dark-background dark:to-dark-border 
       text-light-whiteText dark:text-dark-text">
       {/* Full Page Background Section for Natural Burial */}
       <div
@@ -373,3 +373,4 @@ function NaturalBurial() {
 }
 
 export default NaturalBurial;
+

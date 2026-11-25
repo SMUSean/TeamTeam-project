@@ -1,6 +1,6 @@
-/**
+﻿/**
  * ============================================================
- *  VerifiedGallery Component – Saint Margaret’s Bay Area Gallery
+ *  VerifiedGallery Component â€“ Saint Margaretâ€™s Bay Area Gallery
  *  ------------------------------------------------------------
  *  Description:
  *  The VerifiedGallery component renders all approved images in
@@ -70,14 +70,14 @@ export default function VerifiedGallery({ images }) {
   }, [selectedImage]);
 
   return (
-    <section className="centered-section fade-slide-up p-16 rounded-2xl shadow-xl mt-12 w-full mx-6 md:mx-10">
+    <section className="centered-section p-10 md:p-14 rounded-2xl shadow-xl mt-6 w-full max-w-7xl mx-auto">
 
       {/* Section Header */}
       <div
         id="header-bg"
         className="bg-light-background dark:bg-[var(--mainColor-dark)] backdrop-blur-md rounded-xl p-6 inline-block mb-10 ring-1 ring-white/20"
       >
-        <h2 className="text-3xl mt-6 font-semibold">
+        <h2 className="text-3xl font-semibold">
           Gallery Photos
         </h2>
       </div>
@@ -156,6 +156,8 @@ export default function VerifiedGallery({ images }) {
     </section>
   );
 }
+
+
 
 
 
