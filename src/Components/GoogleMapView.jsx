@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file GoogleMapView.jsx
  * @description Main container component for the Google Maps integration.
  * This component manages all map-related state, user interactions, and coordinates
@@ -13,11 +13,11 @@
  * - Manages audio narration for markers and proximity-based audio
  * - Provides toggle controls for map layer visibility
  * 
- * @author Afif Mahmud
+ * @author Afif Mahmud, Ashesh Pahari
  */
-
 import React, {
     useCallback,
+    useEffect,
     useRef,
     useState,
     useMemo,
@@ -61,11 +61,22 @@ export default function GoogleMapView() {
 
     // Map instance reference (used for programmatic map control)
     const [map, setMap] = useState(null);
+
+    useEffect(() => {
+        const dismissDevNotice = () => {
+            const btn = document.querySelector(".dismissButton");
+            if (btn) btn.click();
+        };
+        dismissDevNotice();
+        const observer = new MutationObserver(dismissDevNotice);
+        observer.observe(document.body, { childList: true, subtree: true });
+        return () => observer.disconnect();
+    }, []);
     
     // Visibility toggles for map layers
     const [showRegion, setShowRegion] = useState(true);        // Show region polygons
     const [showTrail, setShowTrail] = useState(true);          // Show trail segments
-    const [showGoogleMarkers, setShowGoogleMarkers] = useState(true); // Show Google's default markers
+    const [showGoogleMarkers, setShowGoogleMarkers] = useState(false); // Show Google's default markers
     const [trackUser, setTrackUser] = useState(false);          // Track user location continuously
 
     // Hover state management for interactive elements
@@ -265,7 +276,7 @@ export default function GoogleMapView() {
     }
 
     if (!isLoaded) {
-        return <div>Loading map…</div>;
+        return <div>Loading mapâ€¦</div>;
     }
 
     return (
@@ -315,3 +326,7 @@ export default function GoogleMapView() {
         />
     );
 }
+
+
+
+

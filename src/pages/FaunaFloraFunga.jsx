@@ -1,10 +1,11 @@
-/**
+﻿/**
  * @file FaunaFloraFunga.jsx
  * @description FFF page, required by terry's software requirement document.
- * @author Yilin Huang, Jaden Eisenhauer
+ * @author Yilin Huang, Jaden Eisenhauer, Ashesh Pahari
  */
-import React from "react";// Reuse gallery styles for card layout and responsiveness
-import "../index.css"; // Ensure dark mode and global styles
+import React from "react";
+import { FaVolumeUp } from "react-icons/fa";
+import "../index.css";
 
 const fauna = {
   title: "Fauna",
@@ -31,56 +32,56 @@ const cards = [fauna, flora, funga];
 
 function FaunaFloraFunga() {
   return (
-    <div className="flex flex-col items-center justify-center min-w-full min-h-screen text-fffpage-text border-fffpage-border bg-fffpage-background dark:text-dark-text dark:bg-dark-background">
-      <h1 className="text-4xl font-bold mb-8 text-center tracking-wide">Fauna / Flora / Funga</h1>
-      <div className="flex flex-col md:flex-row gap-8 justify-center items-center w-full max-w-5xl">
-        {cards.map((card, idx) => (
+    <div className="flex flex-col items-center justify-center min-w-full min-h-[calc(100vh-5rem)] py-12 px-6 bg-gradient-to-b from-light-border via-light-background to-light-border dark:from-gray-900 dark:via-dark-background dark:to-gray-900 text-light-text dark:text-dark-text">
+      <h1 className="text-3xl md:text-4xl font-extrabold mb-3 text-center tracking-wide text-light-primary dark:text-dark-primary">
+        Fauna / Flora / Funga
+      </h1>
+      <p className="text-sm md:text-base opacity-85 mb-10 text-center max-w-2xl">
+        Explore the wonders of woodland life across animals, plants, and forest fungi.
+      </p>
+
+      {/* Responsive 3-column card grid for Fauna, Flora, and Funga */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl">
+        {cards.map((card) => (
           <div
             key={card.title}
-            className={`
-              group relative flex flex-col items-center rounded-2xl shadow-lg
-              hover:scale-105 hover:shadow-2xl transition-all duration-300
-              border-2 dark:text-dark-text dark:bg-dark-border
-              w-80 p-6 text-fffitem-text border-fffitem-border bg-light-background
-            `}
+            className="group relative flex flex-col items-center rounded-3xl shadow-xl hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 border border-black/10 dark:border-white/10 bg-white/75 dark:bg-dark-border/85 backdrop-blur-md p-7 text-light-text dark:text-dark-text"
             tabIndex={0}
             aria-label={card.title}
           >
             <img
               src={card.img}
               alt={card.title}
-              className="w-48 h-48 object-cover rounded-xl mb-4 border-4 dark:text-dark-text dark:bg-dark-border shadow-md group-hover:shadow-xl transition"
+              className="w-48 h-48 object-cover rounded-2xl mb-5 border-2 border-white/60 dark:border-white/15 shadow-md"
               draggable={false}
             />
-            <h2 className="text-2xl font-semibold mb-2">{card.title}</h2>
-            <p className="text-base mb-4 text-center">{card.desc}</p>
+            <h2 className="text-2xl font-bold mb-2 text-light-primary dark:text-dark-primary">
+              {card.title}
+            </h2>
+            <p className="text-sm md:text-base leading-relaxed mb-6 text-center opacity-90">
+              {card.desc}
+            </p>
             {card.audio ? (
               <button
-                className="mt-auto rounded-lg font-medium shadow transition "
+                className="mt-auto inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#6D3D86]/75 dark:bg-dark-highlight/75 text-white/95 text-sm font-semibold shadow-sm cursor-not-allowed"
                 disabled
                 title="Audio coming soon!"
               >
-                🔊 Play Audio (Coming Soon)
+                <FaVolumeUp />
+                <span>Play Audio (Coming Soon)</span>
               </button>
             ) : (
-              <div className="mt-auto rounded-lg font-medium shadow cursor-not-allowed">
+              <div className="mt-auto inline-flex items-center px-5 py-2.5 rounded-xl bg-black/10 dark:bg-white/10 text-sm font-medium opacity-75 cursor-not-allowed">
                 No Audio Available
               </div>
             )}
-            {/* Decorative overlay for interactivity */}
-            <div className="absolute inset-0 rounded-2xl pointer-events-none transition
-              group-hover:bg-transparent group-hover:dark:bg-transparent" />
           </div>
         ))}
-      </div>
-      <br />
-      <div className="mt-8 text-center dark:text-dark-text text-sm">
-        <span>
-          Explore the wonders of woodland life. Audio for Fauna and Flora coming soon!
-        </span>
       </div>
     </div>
   );
 }
 
 export default FaunaFloraFunga;
+
+

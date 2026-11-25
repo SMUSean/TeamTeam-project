@@ -1,215 +1,76 @@
-/**
- * @file Home.js
- * @description The Home Page component for the Woodland Conservation Site. This component includes a hero section, a text-to-speech feature for accessibility, and information about the site's conservation initiatives.
- *
- * React functions and components are documented to ensure clarity and maintainability. Inline comments are used sparingly to provide context where necessary.
- *
- * COTS (Commercial Off-The-Shelf Software):
- * - React: https://reactjs.org/
- * - React Icons: https://react-icons.github.io/react-icons/
- * - Speech Synthesis API: https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis
- *
- * Image Source Credits:
- * - Background Image: Local asset located at "../assets/Light BG Image.jpg"
- * - Hero Section Image: https://www.pexels.com/
- *
- * @author Raish Raj Joshi, Tania Terence, Freddy Rideout, Olivia McNeill
+﻿/**
+ * @file Home.jsx
+ * @author Ashesh Pahari
  */
+import React from "react";
+import { Link } from "react-router-dom";
+import firstpic from "../assets/firstpic.jpg";
 
-import { useState } from "react"; // React hook for managing state
-import { FaVolumeUp, FaPause } from "react-icons/fa"; // Icons for text-to-speech buttons
-import image from "../assets/Light BG Image.jpg"; // Background image for the hero section
-
-/**
- * @function Home
- * @description Renders the Home Page of the Woodland Conservation Site, including a hero section, text-to-speech functionality, and content sections for conservation initiatives.
- *
- * @returns {JSX.Element} The rendered Home Page component.
- */
 export default function Home() {
-  // State to track which text is currently being spoken
-  const [speakingText, setSpeakingText] = useState("");
-
-  /**
-   * Handles text-to-speech functionality by toggling speech synthesis for the given text.
-   *
-   * @param {string} text - The text to be spoken.
-   *
-   * @author Raish Raj Joshi
-   */
-  const handleSpeakText = (text) => {
-    if (speakingText === text) {
-      // Pause and cancel if the same text is already being spoken
-      window.speechSynthesis.pause();
-      window.speechSynthesis.cancel();
-      setSpeakingText(""); // Reset speaking text
-    } else {
-      // Start speaking new text
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = "en-CA"; // Set language to Canadian English
-      
-
-      // Reset state when speech ends
-      utterance.onend = () => {
-        setSpeakingText("");
-      };
-
-      window.speechSynthesis.speak(utterance);
-      setSpeakingText(text); // Update speaking text
-    }
-  };
-
   return (
-    <div>
-      {/* Hero Section */}
-      <div
-        className="relative h-[50%] w-full bg-cover bg-center"
-        style={{ backgroundImage: `url(${image})` }}
-      >
-        {/* Dark overlay */}
-        <div className="absolute inset-0 bg-black opacity-50"></div>
-
-        {/* Content */}
-        <div className="relative z-10 flex items-center justify-center">
-          {/* Left Section - Hero Text */}
-          <div className="w-[50%] text-left text-white">
-            <h1 className="text-[6vmin] flex flex-col">
-              Welcome to the{" "}
-              <span className="text-light-primary dark:text-dark-primary">
-                Woodland Conservation Site 
-              </span>
-            </h1>
-            <p className="text-[2vmin] flex items-center ">
-              <button
-                onClick={() =>
-                  handleSpeakText(
-                    "Explore the serenity of nature and contribute to preserving the delicate balance of our ecosystem. Learn how to protect wildlife, engage in sustainable practices, and celebrate the beauty of our natural world."
-                  )
-                }
-                className="bg-transparent text-blue-500 hover:text-blue-700 rounded-full shadow-lg hover:bg-light-primary transition-all"
-                aria-label="Read out loud"
-              >
-                {speakingText ===
-                "Explore the serenity of nature and contribute to preserving the delicate balance of our ecosystem. Learn how to protect wildlife, engage in sustainable practices, and celebrate the beauty of our natural world." ? (
-                  <FaPause className="text-xl" />
-                ) : (
-                  <FaVolumeUp className="text-xl" />
-                )}
-              </button>
-              Explore the serenity of nature and contribute to preserving the
-              delicate balance of our ecosystem. Learn how to protect wildlife,
-              engage in sustainable practices, and celebrate the beauty of our
-              natural world.
-            </p>
-          </div>
-
-          {/* Right Section - Hero Image */}
-          <div className="w-[50%]">
-            <img
-              src={image}
-              alt="Woodland Conservation"
-              className="w-full rounded-lg shadow-xl"
-            />
+    <div className="relative min-h-[90vh] flex flex-col items-center justify-start text-light-text dark:text-dark-text bg-gradient-to-b from-light-border via-light-background to-light-border dark:from-gray-900 dark:via-dark-background dark:to-gray-900 pb-20">
+      {/* Hero Banner Section with Gradient Vignette */}
+      <div className="relative w-full h-[60vh] min-h-[420px] overflow-hidden shadow-2xl">
+        <img
+          src={firstpic}
+          alt="St. Margarets Bay Woodland"
+          className="w-full h-full object-cover filter brightness-95"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10 flex flex-col items-center justify-center text-center px-4">
+          <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-4 tracking-tight drop-shadow-md">
+            St. Margarets Bay Stewardship
+          </h1>
+          <p className="text-lg md:text-xl text-gray-200 max-w-2xl mb-8 font-light drop-shadow">
+            Conserving our woodlands, protecting local wildlife, and keeping nature pristine for generations to come.
+          </p>
+          <div className="flex gap-4">
+            <Link
+              to="/ecosystem"
+              className="px-8 py-3 rounded-xl bg-[#6D3D86] text-white font-semibold shadow-lg hover:bg-[#5b3270] transition transform hover:-translate-y-0.5"
+            >
+              Explore Ecosystem
+            </Link>
+            <Link
+              to="/gallery"
+              className="px-8 py-3 rounded-xl bg-white/20 backdrop-blur-md text-white font-semibold border border-white/30 hover:bg-white/30 transition transform hover:-translate-y-0.5"
+            >
+              View Gallery
+            </Link>
           </div>
         </div>
       </div>
 
-      {/* Page Content Section */}
-      <div>
-        <h2 className="text-[3vmin] text-center bg-light-border text-light-text dark:text-dark-text dark:bg-dark-background">What We Do</h2>
-        <div className="flex justify-center bg-light-border dark:bg-dark-background">
-          <div className="grid grid-cols-3 w-[95%] gap-[2%]">
-            {/* Conservation Projects Card */}
-            <div
-              className="bg-light-background text-light-text dark:text-dark-text dark:bg-dark-border rounded-lg shadow-lg hover:scale-105 transition-all"
-              style={{ transition: "scale 0.5s" }}
-            >
-              <h3 className="text-xl">Conservation Projects</h3>
-              <p>
-                We focus on preserving natural habitats and wildlife to ensure a
-                healthy ecosystem for future generations.
-              </p>
-              <button
-                onClick={() =>
-                  handleSpeakText(
-                    "We focus on preserving natural habitats and wildlife to ensure a healthy ecosystem for future generations."
-                  )
-                }
-                className="mr-4 p-2 bg-transparent text-blue-500 rounded-full shadow-lg hover:bg-light-primary transition-all"
-                aria-label="Read out loud"
-              >
-                {speakingText ===
-                "We focus on preserving natural habitats and wildlife to ensure a healthy ecosystem for future generations." ? (
-                  <FaPause className="text-xl" />
-                ) : (
-                  <FaVolumeUp className="text-xl" />
-                )}
-              </button>
-            </div>
+      {/* Feature Summary Cards */}
+      <div className="max-w-6xl w-full mx-auto px-6 mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="bg-white/70 dark:bg-dark-border/80 backdrop-blur-md rounded-2xl p-8 shadow-xl border border-black/5 dark:border-white/10 flex flex-col items-center text-center">
+          <h3 className="text-xl font-bold mb-3 text-light-primary dark:text-dark-primary">
+            Woodland Conservation
+          </h3>
+          <p className="text-sm md:text-base opacity-90 leading-relaxed">
+            Protecting native flora like yellow birch trees and vital wetlands that maintain local ecological balance.
+          </p>
+        </div>
 
-            {/* Sustainable Practices Card */}
-            <div
-              className="bg-light-background text-light-text dark:text-dark-text dark:bg-dark-border p-6 rounded-lg shadow-lg hover:scale-105 transition-all"
-              style={{ transition: "scale 0.5s" }}
-            >
-              <h3 className="text-xl font-semibold mb-4">
-                Sustainable Practices
-              </h3>
-              <p>
-                Learn about eco-friendly practices that help reduce our carbon
-                footprint and contribute to a greener planet.
-              </p>
-              <button
-                onClick={() =>
-                  handleSpeakText(
-                    "Learn about eco-friendly practices that help reduce our carbon footprint and contribute to a greener planet."
-                  )
-                }
-                className="mr-4 p-2 bg-transparent text-blue-500 rounded-full shadow-lg hover:bg-light-primary transition-all"
-                aria-label="Read out loud"
-              >
-                {speakingText ===
-                "Learn about eco-friendly practices that help reduce our carbon footprint and contribute to a greener planet." ? (
-                  <FaPause className="text-xl" />
-                ) : (
-                  <FaVolumeUp className="text-xl" />
-                )}
-              </button>
-            </div>
+        <div className="bg-white/70 dark:bg-dark-border/80 backdrop-blur-md rounded-2xl p-8 shadow-xl border border-black/5 dark:border-white/10 flex flex-col items-center text-center">
+          <h3 className="text-xl font-bold mb-3 text-light-primary dark:text-dark-primary">
+            Community & Stewardship
+          </h3>
+          <p className="text-sm md:text-base opacity-90 leading-relaxed">
+            Collaborating with local members and researchers to foster sustainable outdoor education and low-impact enjoyment.
+          </p>
+        </div>
 
-            {/* Wildlife Protection Card */}
-            <div
-              className="bg-light-background text-light-text dark:text-dark-text dark:bg-dark-border p-6 rounded-lg shadow-lg hover:scale-105 transition-all"
-              style={{ transition: "scale 0.5s" }}
-            >
-              <h3 className="text-xl font-semibold mb-4">
-                Wildlife Protection
-              </h3>
-              <p>
-                We are committed to protecting endangered species and restoring
-                biodiversity to our natural surroundings.
-              </p>
-              <button
-                onClick={() =>
-                  handleSpeakText(
-                    "We are committed to protecting endangered species and restoring biodiversity to our natural surroundings."
-                  )
-                }
-                className="mr-4 p-2 bg-transparent text-blue-500 rounded-full shadow-lg hover:bg-light-primary transition-all"
-                aria-label="Read out loud"
-              >
-                {speakingText ===
-                "We are committed to protecting endangered species and restoring biodiversity to our natural surroundings." ? (
-                  <FaPause className="text-xl" />
-                ) : (
-                  <FaVolumeUp className="text-xl" />
-                )}
-              </button>
-            </div>
-          </div>
+        <div className="bg-white/70 dark:bg-dark-border/80 backdrop-blur-md rounded-2xl p-8 shadow-xl border border-black/5 dark:border-white/10 flex flex-col items-center text-center">
+          <h3 className="text-xl font-bold mb-3 text-light-primary dark:text-dark-primary">
+            Verified Galleries
+          </h3>
+          <p className="text-sm md:text-base opacity-90 leading-relaxed">
+            Explore authentic photographs of regional fauna, flora, and fungi captured across our conservation area.
+          </p>
         </div>
       </div>
     </div>
   );
 }
+
+

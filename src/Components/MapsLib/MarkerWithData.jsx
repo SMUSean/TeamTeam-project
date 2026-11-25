@@ -1,21 +1,18 @@
-/**
+﻿/**
  * @file MarkerWithData.jsx
  * @description Component that renders a map marker with associated data, place details, and interactive features.
  * 
- * @author Afif Mahmud
+ * @author Afif Mahmud, Ashesh Pahari
  */
-
 import React, { useState } from "react";
-import { Marker, InfoWindow, OverlayView } from "@react-google-maps/api";
+import { Marker, InfoWindow } from "@react-google-maps/api";
 
 import { usePlaceDetails, useStaticMarkerDetails } from "./placeDetails";
 import Hovercard from "./hovercard";
 import MarkerDetailModal from "./MarkerDetailModal";
-import { getPinIcon, PIN_COLORS } from "./config";
+import { getPinIcon } from "./config";
 
-/**
- * Combine place-data and fallback-data for a markerConfig.
- */
+// Prefer live Google Places details when available; otherwise fall back to static marker config
 function buildMarkerModel(markerConfig, placeData, fallbackData) {
     const hasPlaceQuery =
         typeof markerConfig.placeQuery === "string" &&
@@ -49,15 +46,15 @@ function buildMarkerModel(markerConfig, placeData, fallbackData) {
 }
 
 export default function MarkerWithData({
-                                           map,
-                                           markerConfig,
-                                           hoveredMarkerId,
-                                           openHover,
-                                           scheduleHoverClose,
-                                           speakingMarkerId,
-                                           onStartNarration,
-                                           onStopNarration,
-                                       }) {
+    map,
+    markerConfig,
+    hoveredMarkerId,
+    openHover,
+    scheduleHoverClose,
+    speakingMarkerId,
+    onStartNarration,
+    onStopNarration,
+}) {
     const [showDetailModal, setShowDetailModal] = useState(false);
 
     if (markerConfig.pinVisible === false) {
@@ -85,14 +82,9 @@ export default function MarkerWithData({
         return null;
     }
 
+    // Resolve native Google Maps pin icon (defaults to standard red pin)
     const icon =
         getPinIcon(markerConfig.pinStyle, markerConfig.pinColor) || undefined;
-
-    const labelBgColor =
-        (markerConfig.pinColor &&
-            PIN_COLORS[markerConfig.pinColor]) ||
-        PIN_COLORS.Default ||
-        "#000000";
 
     const hasNarration = !!markerConfig.desc;
     const isSpeaking = speakingMarkerId === markerConfig.id;
@@ -107,9 +99,11 @@ export default function MarkerWithData({
 
     return (
         <>
+            {/* Native Google Maps Marker with hover-based InfoWindow */}
             <Marker
                 key={model.id}
                 position={model.position}
+                title={model.markerTitle}
                 icon={icon}
                 onMouseOver={hasHovercard ? () => openHover(model.id) : undefined}
                 onMouseOut={hasHovercard ? scheduleHoverClose : undefined}
@@ -135,10 +129,10 @@ export default function MarkerWithData({
                                 onPlay={
                                     hasNarration
                                         ? () =>
-                                            onStartNarration(
-                                                markerConfig.id,
-                                                markerConfig.desc
-                                            )
+                                              onStartNarration(
+                                                  markerConfig.id,
+                                                  markerConfig.desc
+                                              )
                                         : undefined
                                 }
                                 onStop={
@@ -158,36 +152,8 @@ export default function MarkerWithData({
                 title={model.markerTitle}
                 content={markerConfig.clickText}
             />
-
-            {/* Label under the marker, using pinColor as background */}
-            <OverlayView
-                position={model.position}
-                mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
-                getPixelPositionOffset={(width, height) => ({
-                    x: -(width / 2),
-                    y: 8,
-                })}
-            >
-                <div
-                    style={{
-                        pointerEvents: "none",
-                        display: "inline-block",
-                        backgroundColor: labelBgColor,
-                        color: "#ffffff",
-                        padding: "4px 8px",
-                        borderRadius: 9999,
-                        fontSize: 11,
-                        lineHeight: 1.2,
-                        boxShadow: "0 1px 2px rgba(0,0,0,0.4)",
-                        maxWidth: 180,
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                    }}
-                >
-                    {model.markerTitle}
-                </div>
-            </OverlayView>
         </>
     );
 }
+
+

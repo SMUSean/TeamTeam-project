@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file SiteMap.jsx
  * @description Site map page with GPS tracking, site boundaries, and POI markers.
  * This page provides a full-screen interactive map view of the conservation site,
@@ -7,9 +7,8 @@
  * The page uses a full viewport height layout to maximize map visibility and
  * prevent scrolling, ensuring the map component has proper dimensions for rendering.
  * 
- * @author Afif Mahmud
+ * @author Afif Mahmud, Ashesh Pahari
  */
-
 import React from "react";
 import GoogleMapView from "../Components/GoogleMapView.jsx";
 
@@ -28,7 +27,7 @@ import GoogleMapView from "../Components/GoogleMapView.jsx";
 export default function SiteMapPage() {
     return (
         <div style={{ 
-            height: "100vh",        // Full viewport height
+            height: "calc(100vh - 5rem)",        // Full viewport height
             width: "100%",          // Full width
             display: "flex",        // Flexbox layout
             flexDirection: "column", // Stack children vertically
@@ -51,3 +50,6 @@ export default function SiteMapPage() {
         </div>
     );
 }
+
+
+

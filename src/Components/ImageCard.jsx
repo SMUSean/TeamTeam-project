@@ -1,6 +1,6 @@
-/**
+﻿/**
  * ============================================================
- *  ImageCard Component – Saint Margaret’s Bay Area Gallery
+ *  ImageCard Component ΓÇô Saint MargaretΓÇÖs Bay Area Gallery
  *  ------------------------------------------------------------
  *  Description:
  *  The ImageCard component is a reusable visual tile used across
@@ -41,13 +41,12 @@
  *    alt="Verified Image"
  *  />
  *
- *  @author
+ *  @author, Ashesh Pahari
  *   - Samson Mate (A00476626)
  *
  *  @lastupdated October 2025
  * ============================================================
  */
-
 import React from "react";
 
 export default function ImageCard({ src, alt, onRemove }) {
@@ -55,10 +54,13 @@ export default function ImageCard({ src, alt, onRemove }) {
     <div
       className="relative bg-white/25 dark:bg-white/10 rounded-2xl shadow-xl border-4 border-white/40 dark:border-white/20 overflow-hidden transition-transform duration-200 hover:scale-[1.02]"
     >
-      {/* Fixed-height visual tile; object-cover preserves image aspect */}
-      <img src={src} alt={alt} className="w-full h-64 object-cover" />
+      <img
+        src={src}
+        alt={alt}
+        decoding="async"
+        className="w-full h-64 object-cover"
+      />
 
-      {/* Removal control (only shown when a handler is provided) */}
       {onRemove && (
         <button
           onClick={onRemove}

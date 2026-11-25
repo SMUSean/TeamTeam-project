@@ -1,10 +1,11 @@
-/**
+﻿/**
  * @file Ecommerce.jsx
  * @description eCommerce page for purchasing local, eco-friendly products/services.
- * @author Yilin Huang, Jaden Eisenhauer
+ * @author Yilin Huang, Jaden Eisenhauer, Ashesh Pahari
  */
-
 import React from "react";
+import fern from "../assets/fern.png";
+import heron from "../assets/heron.jpg";
 
 const products = [
   {
@@ -12,7 +13,7 @@ const products = [
     description:
       "Support reforestation by purchasing a native tree sapling. Each purchase helps restore local woodland and includes planting guidance.",
     price: "$15.00",
-    image: "/src/assets/fern.png",
+    image: fern,
     type: "product",
   },
   {
@@ -20,41 +21,46 @@ const products = [
     description:
       "Join a local expert for a guided walk through the woodland. Learn about native plants, wildlife, and conservation efforts.",
     price: "$25.00",
-    image: "/src/assets/heron.jpg",
+    image: heron,
     type: "service",
   },
 ];
 
 export default function Ecommerce() {
   return (
-    <div className="min-w-full min-h-screen mx-auto py-10 px-4 dark:bg-dark-background dark:text-dark-text bg-light-border text-light-text">
-      <h1 className="text-3xl font-bold mb-6 text-center">
+    <div className="max-w-5xl mx-auto py-12 px-6 dark:text-dark-text text-light-text">
+      <h1 className="text-3xl md:text-4xl font-bold mb-3 text-center">
         eCommerce: Support Local Conservation
       </h1>
-      <p className="mb-8 text-center">
+      <p className="mb-10 text-center max-w-2xl mx-auto opacity-90">
         Purchase eco-friendly products and services that directly support our woodland conservation efforts.
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {products.map((item) => (
           <div
             key={item.name}
-            className="rounded-lg shadow-md p-6 flex flex-col items-center dark:bg-dark-border dark:text-dark-text bg-light-background text-light-text"
+            className="rounded-2xl shadow-lg p-8 flex flex-col items-center bg-white/60 dark:bg-dark-border border border-black/10 dark:border-white/10"
           >
             <img
               src={item.image}
               alt={item.name}
-              className="w-32 h-32 object-cover rounded mb-4 border"
+              className="w-36 h-36 object-cover rounded-xl mb-5 shadow-sm border border-black/10 dark:border-white/15"
             />
-            <h2 className="text-xl mb-2 ">
+            <h2 className="text-xl font-semibold mb-2">
               {item.name}
             </h2>
-            <p className="mb-4  text-center">{item.description}</p>
-            <span className="text-lg mb-2">{item.price}</span>
+            <p className="mb-5 text-center text-sm md:text-base leading-relaxed opacity-90">
+              {item.description}
+            </p>
+            <span className="text-xl font-bold mb-4 text-light-primary dark:text-dark-primary">
+              {item.price}
+            </span>
             <button
-              className="mt-auto px-6 py-2 rounded transition-colors duration-200"
+              className="mt-auto px-6 py-2.5 rounded-lg bg-[#6D3D86]/70 dark:bg-dark-highlight/70 text-white/90 font-medium cursor-not-allowed"
               disabled
+              title="Online checkout coming soon"
             >
-              Purchase
+              Purchase (Coming Soon)
             </button>
           </div>
         ))}
@@ -62,3 +68,5 @@ export default function Ecommerce() {
     </div>
   );
 }
+
+

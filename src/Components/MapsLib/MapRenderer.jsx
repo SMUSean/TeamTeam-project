@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file MapRenderer.jsx
  * @description Main map rendering component that displays the Google Map with all overlays,
  * including regions, trails, markers, user location, and interactive controls.
@@ -11,9 +11,8 @@
  * - User location tracking
  * - Interactive toolbars and controls
  * 
- * @author Afif Mahmud
+ * @author Afif Mahmud, Ashesh Pahari
  */
-
 import React from "react";
 import {
     GoogleMap,
@@ -316,6 +315,7 @@ export default function MapRenderer({
                             key={markerConfig.id}
                             map={mapInstance}
                             markerConfig={markerConfig}
+                            zoom={zoom}
                             hoveredMarkerId={hoveredMarkerId}
                             openHover={openHover}
                             scheduleHoverClose={scheduleHoverClose}
@@ -384,7 +384,7 @@ export default function MapRenderer({
                 </div>
 
                 {/* Centered toolbar overlay on top of the map */}
-                <div className="pointer-events-none absolute inset-x-0 top-4 flex justify-center z-10">
+                <div className="pointer-events-none absolute top-4 left-4 z-10">
                     <MapToolbar
                         showRegion={showRegion}
                         showTrail={showTrail}
@@ -436,3 +436,7 @@ export default function MapRenderer({
         </div>
     );
 }
+
+
+
+
