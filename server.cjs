@@ -52,6 +52,12 @@ const fs = require('fs');
 const app = express();
 const PORT = 5555;
 
+//Mysql info
+const DBHOST = process.env.Host;
+const DBNAME = process.env.DBName;
+const DBPASSWORD = process.env.Password;
+const DBUSERNAME = process.env.Username;
+
 app.use(bodyParser.json());
 app.use(cors());
 
